@@ -120,14 +120,12 @@ int main(int argc, char* argv[]) {
   if (!renderer) SDL_Quit();
   SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
 
-  consoleInit(NULL);
-
+  init_ui(renderer);
   TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
 
   SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Settings", White);
   SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
-  init_ui(renderer);
 
   while (appletMainLoop()) {
     hidScanInput();
@@ -165,17 +163,6 @@ int main(int argc, char* argv[]) {
     SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
     SDL_RenderPresent(renderer);
-
-    if (SDL_GetPowerInfo(NULL, &pct) == SDL_POWERSTATE_ON_BATTERY) {
-      printf("test");
-    }
-
-
-
-
-    /*gfxFlushBuffers();
-    gfxSwapBuffers();
-    gfxWaitForVsync();*/
 
     SDL_Delay(1);
   }
