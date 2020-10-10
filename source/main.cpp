@@ -19,12 +19,21 @@ std::list<std::string> games {
 
 SDL_Rect pos = { (1280 / 2) - (316 / 2), 720 - 316 - 60, 0, 0 };
 SDL_Rect pos2 = { (1280 / 2) + (316 / 2) + 20, 720 - 250 - 60, 0, 0 };
-
+SDL_Rect hb_menu_pos = { 160, 40, 0, 0 };
 SDL_Rect wallpaper_pos = { 0, 0, 0, 0 };
+SDL_Rect icons_bg_pos = { 20, 200, 0, 0 };
+SDL_Rect settings_pos = { 50, 720 - 60 - 50, 0, 0 };
+
+
 
 SDL_Texture *wallpaper_tex = NULL;
 SDL_Texture *tex = NULL;
 SDL_Texture *tex2 = NULL;
+SDL_Texture *hb_menu_tex = NULL;
+SDL_Texture *icons_bg_tex = NULL;
+SDL_Texture *settings_tex = NULL;
+
+
 
 int pct;
 
@@ -56,6 +65,30 @@ void init_ui(SDL_Renderer* renderer)
       tex2 = SDL_CreateTextureFromSurface(renderer, image2);
       SDL_FreeSurface(image2);
     }
+  }
+
+  SDL_Surface *hb_menu = IMG_Load("hb_menu.png");
+  if (hb_menu) {
+    hb_menu_pos.w = 65;
+    hb_menu_pos.h = 65;
+    hb_menu_tex = SDL_CreateTextureFromSurface(renderer, hb_menu);
+    SDL_FreeSurface(hb_menu);
+  }
+
+  SDL_Surface *icons_bg = IMG_Load("icons_bg.png");
+  if (icons_bg) {
+    icons_bg_pos.w = icons_bg->w;
+    icons_bg_pos.h = icons_bg->h;
+    icons_bg_tex = SDL_CreateTextureFromSurface(renderer, icons_bg);
+    SDL_FreeSurface(icons_bg);
+  }
+
+  SDL_Surface *settings = IMG_Load("settings.png");
+  if (settings) {
+    settings_pos.w = 50;
+    settings_pos.h = 50;
+    settings_tex = SDL_CreateTextureFromSurface(renderer, settings);
+    SDL_FreeSurface(settings);
   }
 
 }
@@ -109,7 +142,16 @@ int main(int argc, char* argv[]) {
         SDL_RenderCopy(renderer, tex2, NULL, &pos2);
       }
     }
-    
+    if (hb_menu_tex){
+      SDL_RenderCopy(renderer, hb_menu_tex, NULL, &hb_menu_pos);
+    }
+    if (icons_bg_tex){
+      SDL_RenderCopy(renderer, icons_bg_tex, NULL, &icons_bg_pos);
+    }
+    if (settings_tex){
+      SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
+    }
+
     SDL_RenderPresent(renderer);
 
     if (SDL_GetPowerInfo(NULL, &pct) == SDL_POWERSTATE_ON_BATTERY) {
