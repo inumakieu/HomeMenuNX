@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
     if (settings_tex){
       SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
     }
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    SDL_RenderCopy(renderer, Message, NULL, NULL);
 
     SDL_RenderPresent(renderer);
 
