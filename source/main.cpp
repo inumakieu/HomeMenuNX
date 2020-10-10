@@ -34,6 +34,10 @@ SDL_Texture *icons_bg_tex = NULL;
 SDL_Texture *settings_tex = NULL;
 
 
+SDL_Color White = {255, 255, 255};
+SDL_Rect Message_rect = { 0, 0, 0, 0 };
+
+
 
 int pct;
 
@@ -104,6 +108,8 @@ int main(int argc, char* argv[]) {
   romfsInit();
   chdir("romfs:/");
 
+  TTF_Init();
+
   /*gfxInitDefault();
   consoleInit(nullptr);*/
 
@@ -115,6 +121,11 @@ int main(int argc, char* argv[]) {
   SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
 
   consoleInit(NULL);
+
+  TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
+
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Settings", White);
+  SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
   init_ui(renderer);
 
@@ -151,6 +162,7 @@ int main(int argc, char* argv[]) {
     if (settings_tex){
       SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
     }
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
     SDL_RenderPresent(renderer);
 
@@ -159,12 +171,16 @@ int main(int argc, char* argv[]) {
     }
 
 
+
+
     /*gfxFlushBuffers();
     gfxSwapBuffers();
     gfxWaitForVsync();*/
 
     SDL_Delay(1);
   }
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
   SDL_FreeSurface(windowSurface);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
