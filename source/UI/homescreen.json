@@ -1,0 +1,28 @@
+{
+  "main": {
+    "hb_menu": {
+      "x": 160,
+      "y": 40
+    },
+    "icons": {
+      "bg": {
+        "x": 20,
+        "y": 200
+      }
+      "settings": {
+        "x": 50,
+        "y": 610
+      },
+    },
+    "game_icons": {
+      "selected": {
+        "x": 482,
+        "y": 344
+      },
+      "normal": {
+        "spacing": 20,
+        "position": "bottom",
+      }
+    }
+  }
+}
