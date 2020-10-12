@@ -49,6 +49,12 @@ SDL_Rect controller_mode_pos = { 445, 45, 0, 0 };
 SDL_Rect wifi_pos = { 760, 63, 0, 0 };
 SDL_Rect battery_pos = { 790, 68, 0, 0 };
 SDL_Rect time_text_pos = { 606, 60, 0, 0 };
+SDL_Rect suspended_bg_pos = { 550, 570, 0, 0 };
+SDL_Rect suspended_text_pos = { 584, 580, 0, 0 };
+SDL_Rect game_title_text_pos = { 0, 260, 0, 0 };
+SDL_Rect game_title_bg_pos = { 0, 254, 0, 0 };
+SDL_Rect game_info_text_pos = { 0, 306, 0, 0 };
+SDL_Rect game_info_bg_pos = { 0, 284, 0, 0 };
 
 SDL_Texture *wallpaper_tex = NULL;
 SDL_Texture *game1_tex = NULL;
@@ -73,8 +79,16 @@ SDL_Texture *top_menu_bg_tex = NULL;
 SDL_Texture *controller_mode_tex = NULL;
 SDL_Texture *wifi_tex = NULL;
 SDL_Texture *battery_tex = NULL;
+SDL_Texture *suspended_bg_tex = NULL;
+SDL_Texture *suspended_text_tex = NULL;
+SDL_Texture *game_title_text_tex = NULL;
+SDL_Texture *game_title_bg_tex = NULL;
+SDL_Texture *game_info_text_tex = NULL;
+SDL_Texture *game_info_bg_tex = NULL;
 
 SDL_Color White = {255, 255, 255};
+SDL_Color OffWhite = {230, 230, 230};
+SDL_Color DarkGrey = {11, 11, 11};
 
 void init_ui(SDL_Renderer* renderer)
 {
@@ -223,10 +237,24 @@ void init_ui(SDL_Renderer* renderer)
     SDL_FreeSurface(hb);
   }
 
+  // game info
+  SDL_Surface *game_title_bg = IMG_Load("gamename_bg.png");
+  if (game_title_bg) {
+    game_title_bg_pos.w = 640;
+    game_title_bg_pos.h = 50;
+    game_title_bg_tex = SDL_CreateTextureFromSurface(renderer, game_title_bg);
+    SDL_FreeSurface(game_title_bg);
+  }
+  SDL_Surface *game_info_bg = IMG_Load("company_bg.png");
+  if (game_info_bg) {
+    game_info_bg_pos.w = 640;
+    game_info_bg_pos.h = 50;
+    game_info_bg_tex = SDL_CreateTextureFromSurface(renderer, game_info_bg);
+    SDL_FreeSurface(game_info_bg);
+  }
 
   // game icons
   chdir("romfs:/assets/games/");
-  // suspended
   SDL_Surface *game1 = IMG_Load("genshin-impact.jpg");
   if (game1) {
     gameicon1.w = 320;
@@ -234,7 +262,6 @@ void init_ui(SDL_Renderer* renderer)
     game1_tex = SDL_CreateTextureFromSurface(renderer, game1);
     SDL_FreeSurface(game1);
   }
-
   // other titles
   SDL_Surface *game2 = IMG_Load("super-mario-oddyssey.jpg");
   if (game2) {
@@ -249,6 +276,16 @@ void init_ui(SDL_Renderer* renderer)
     gameicon3.h = 260;
     game3_tex = SDL_CreateTextureFromSurface(renderer, game3);
     SDL_FreeSurface(game3);
+  }
+
+  // suspended
+  chdir("romfs:/assets/UI/");
+  SDL_Surface *suspended_bg = IMG_Load("suspended_bg.png");
+  if (suspended_bg) {
+    suspended_bg_pos.w = 155;
+    suspended_bg_pos.h = 40;
+    suspended_bg_tex = SDL_CreateTextureFromSurface(renderer, suspended_bg);
+    SDL_FreeSurface(suspended_bg);
   }
 
 }
@@ -279,8 +316,10 @@ int main(int argc, char* argv[]) {
   init_ui(renderer);
 
   chdir("romfs:/assets/UI/");
+  TTF_Font* font14 = TTF_OpenFont("font.ttf", 14);
   TTF_Font* font = TTF_OpenFont("font.ttf", 18);
   TTF_Font* font26 = TTF_OpenFont("font.ttf", 26);
+  TTF_Font* font30 = TTF_OpenFont("font.ttf", 30);
 
 
   SDL_Surface *news_surface = TTF_RenderText_Blended(font, "News", White);
@@ -297,6 +336,12 @@ int main(int argc, char* argv[]) {
   SDL_Texture *power_text = SDL_CreateTextureFromSurface(renderer, power_surface);
   SDL_Surface *time_surface = TTF_RenderText_Blended(font26, "20:21", White);
   SDL_Texture *time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
+  SDL_Surface *suspended_text_surface = TTF_RenderText_Blended(font14, "SUSPENDED", White);
+  SDL_Texture *suspended_text = SDL_CreateTextureFromSurface(renderer, suspended_text_surface);
+  SDL_Surface *game_title_text_surface = TTF_RenderText_Blended(font30, "Genshin Impact", OffWhite);
+  SDL_Texture *game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
+  SDL_Surface *game_info_text_surface = TTF_RenderText_Blended(font, "miHoYo, 1.0.0", DarkGrey);
+  SDL_Texture *game_info_text = SDL_CreateTextureFromSurface(renderer, game_info_text_surface);
 
   int w, h;
   SDL_QueryTexture(news_text, NULL, NULL, &w, &h);
@@ -320,6 +365,19 @@ int main(int argc, char* argv[]) {
   SDL_QueryTexture(time_text, NULL, NULL, &w, &h);
   time_text_pos.w = w;
   time_text_pos.h = h;
+  SDL_QueryTexture(suspended_text, NULL, NULL, &w, &h);
+  suspended_text_pos.w = w;
+  suspended_text_pos.h = h;
+  SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
+  game_title_text_pos.x = 1280 - w - 20;
+  game_title_text_pos.w = w;
+  game_title_text_pos.h = h;
+  game_title_bg_pos.x = game_title_text_pos.x - 20;
+  SDL_QueryTexture(game_info_text, NULL, NULL, &w, &h);
+  game_info_text_pos.x = 1280 - w - 10;
+  game_info_text_pos.w = w;
+  game_info_text_pos.h = h;
+  game_info_bg_pos.x = game_info_text_pos.x - 20;
 
 
 
@@ -386,6 +444,15 @@ int main(int argc, char* argv[]) {
     if (hb_tex){
       SDL_RenderCopy(renderer, hb_tex, NULL, &hb_pos);
     }
+    if (suspended_bg_tex){
+      SDL_RenderCopy(renderer, suspended_bg_tex, NULL, &suspended_bg_pos);
+    }
+    if (game_info_bg_tex){
+      SDL_RenderCopy(renderer, game_info_bg_tex, NULL, &game_info_bg_pos);
+    }
+    if (game_title_bg_tex){
+      SDL_RenderCopy(renderer, game_title_bg_tex, NULL, &game_title_bg_pos);
+    }
 
     SDL_RenderCopy(renderer, seperator_tex, NULL, &seperator_pos);
     SDL_RenderCopy(renderer, seperator2_tex, NULL, &seperator2_pos);
@@ -401,6 +468,9 @@ int main(int argc, char* argv[]) {
     SDL_RenderCopy(renderer, settings_text, NULL, &settings_text_pos);
     SDL_RenderCopy(renderer, power_text, NULL, &power_text_pos);
     SDL_RenderCopy(renderer, time_text, NULL, &time_text_pos);
+    SDL_RenderCopy(renderer, suspended_text, NULL, &suspended_text_pos);
+    SDL_RenderCopy(renderer, game_title_text, NULL, &game_title_text_pos);
+    SDL_RenderCopy(renderer, game_info_text, NULL, &game_info_text_pos);
 
     SDL_RenderPresent(renderer);
 
@@ -413,6 +483,8 @@ int main(int argc, char* argv[]) {
   SDL_FreeSurface(settings_surface);
   SDL_FreeSurface(power_surface);
   SDL_FreeSurface(time_surface);
+  SDL_FreeSurface(game_title_text_surface);
+  SDL_FreeSurface(game_info_text_surface);
   SDL_DestroyTexture(news_text);
   SDL_DestroyTexture(e_shop_text);
   SDL_DestroyTexture(album_text);
@@ -420,6 +492,8 @@ int main(int argc, char* argv[]) {
   SDL_DestroyTexture(settings_text);
   SDL_DestroyTexture(power_text);
   SDL_DestroyTexture(time_text);
+  SDL_DestroyTexture(game_title_text);
+  SDL_DestroyTexture(game_info_text);
   SDL_FreeSurface(windowSurface);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
