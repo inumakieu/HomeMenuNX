@@ -31,19 +31,24 @@ SDL_Rect controller_pos = { 60, 470, 0, 0 };
 SDL_Rect settings_pos = { 60, 550, 0, 0 };
 SDL_Rect power_pos = { 65, 630, 0, 0 };
 SDL_Rect avatar_pos = { 60, 40, 0, 0 };
-SDL_Rect hb_pos = { 160, 40, 0, 0 };
+SDL_Rect hb_pos = { 140, 40, 0, 0 };
 SDL_Rect name_bg_pos = { 1020, 260, 0, 0 };
 SDL_Rect news_text_pos = { 120, 244, 0, 0 };
 SDL_Rect e_shop_text_pos = { 120, 320, 0, 0 };
 SDL_Rect album_text_pos = { 120, 404, 0, 0 };
-SDL_Rect controller_text_pos = { 120, 474, 0, 0 };
-SDL_Rect settings_text_pos = { 120, 554, 0, 0 };
-SDL_Rect power_text_pos = { 120, 634, 0, 0 };
+SDL_Rect controller_text_pos = { 120, 475, 0, 0 };
+SDL_Rect settings_text_pos = { 120, 556, 0, 0 };
+SDL_Rect power_text_pos = { 120, 636, 0, 0 };
 SDL_Rect seperator_pos = { 45, 290, 0, 0 };
 SDL_Rect seperator2_pos = { 45, 370, 0, 0 };
 SDL_Rect seperator3_pos = { 45, 450, 0, 0 };
 SDL_Rect seperator4_pos = { 45, 530, 0, 0 };
 SDL_Rect seperator5_pos = { 45, 610, 0, 0 };
+SDL_Rect top_menu_bg_pos = { 420, 50, 0, 0 };
+SDL_Rect controller_mode_pos = { 445, 45, 0, 0 };
+SDL_Rect wifi_pos = { 760, 63, 0, 0 };
+SDL_Rect battery_pos = { 790, 68, 0, 0 };
+SDL_Rect time_text_pos = { 606, 60, 0, 0 };
 
 SDL_Texture *wallpaper_tex = NULL;
 SDL_Texture *game1_tex = NULL;
@@ -64,9 +69,12 @@ SDL_Texture *seperator2_tex = NULL;
 SDL_Texture *seperator3_tex = NULL;
 SDL_Texture *seperator4_tex = NULL;
 SDL_Texture *seperator5_tex = NULL;
+SDL_Texture *top_menu_bg_tex = NULL;
+SDL_Texture *controller_mode_tex = NULL;
+SDL_Texture *wifi_tex = NULL;
+SDL_Texture *battery_tex = NULL;
 
 SDL_Color White = {255, 255, 255};
-
 
 void init_ui(SDL_Renderer* renderer)
 {
@@ -167,6 +175,54 @@ void init_ui(SDL_Renderer* renderer)
     SDL_FreeSurface(seperator5);
   }
 
+  // top menu
+  // bg
+  SDL_Surface *top_menu_bg = IMG_Load("top_bg.png");
+  if (top_menu_bg) {
+    top_menu_bg_pos.w = 425;
+    top_menu_bg_pos.h = 50;
+    top_menu_bg_tex = SDL_CreateTextureFromSurface(renderer, top_menu_bg);
+    SDL_FreeSurface(top_menu_bg);
+  }
+  SDL_Surface *controller_mode = IMG_Load("handheld.png");
+  if (controller_mode) {
+    controller_mode_pos.w = 58;
+    controller_mode_pos.h = 58;
+    controller_mode_tex = SDL_CreateTextureFromSurface(renderer, controller_mode);
+    SDL_FreeSurface(controller_mode);
+  }
+  SDL_Surface *wifi = IMG_Load("wifi.png");
+  if (wifi) {
+    wifi_pos.w = 20;
+    wifi_pos.h = 20;
+    wifi_tex = SDL_CreateTextureFromSurface(renderer, wifi);
+    SDL_FreeSurface(wifi);
+  }
+  SDL_Surface *battery = IMG_Load("battery.png");
+  if (battery) {
+    battery_pos.w = 31;
+    battery_pos.h = 15;
+    battery_tex = SDL_CreateTextureFromSurface(renderer, battery);
+    SDL_FreeSurface(battery);
+  }
+
+  // avatar & hb menu
+
+  SDL_Surface *avatar = IMG_Load("avatar.png");
+  if (avatar) {
+    avatar_pos.w = 60;
+    avatar_pos.h = 60;
+    avatar_tex = SDL_CreateTextureFromSurface(renderer, avatar);
+    SDL_FreeSurface(avatar);
+  }
+  SDL_Surface *hb = IMG_Load("hb_menu.png");
+  if (hb) {
+    hb_pos.w = 60;
+    hb_pos.h = 60;
+    hb_tex = SDL_CreateTextureFromSurface(renderer, hb);
+    SDL_FreeSurface(hb);
+  }
+
 
   // game icons
   chdir("romfs:/assets/games/");
@@ -224,19 +280,23 @@ int main(int argc, char* argv[]) {
 
   chdir("romfs:/assets/UI/");
   TTF_Font* font = TTF_OpenFont("font.ttf", 18);
+  TTF_Font* font26 = TTF_OpenFont("font.ttf", 26);
 
-  SDL_Surface *news_surface = TTF_RenderText_Solid(font, "News", White);
+
+  SDL_Surface *news_surface = TTF_RenderText_Blended(font, "News", White);
   SDL_Texture *news_text = SDL_CreateTextureFromSurface(renderer, news_surface);
-  SDL_Surface *e_shop_surface = TTF_RenderText_Solid(font, "E-Shop", White);
+  SDL_Surface *e_shop_surface = TTF_RenderText_Blended(font, "E-Shop", White);
   SDL_Texture *e_shop_text = SDL_CreateTextureFromSurface(renderer, e_shop_surface);
-  SDL_Surface *album_surface = TTF_RenderText_Solid(font, "Album", White);
+  SDL_Surface *album_surface = TTF_RenderText_Blended(font, "Album", White);
   SDL_Texture *album_text = SDL_CreateTextureFromSurface(renderer, album_surface);
-  SDL_Surface *controller_surface = TTF_RenderText_Solid(font, "Controller", White);
+  SDL_Surface *controller_surface = TTF_RenderText_Blended(font, "Controller", White);
   SDL_Texture *controller_text = SDL_CreateTextureFromSurface(renderer, controller_surface);
-  SDL_Surface *settings_surface = TTF_RenderText_Solid(font, "Settings", White);
+  SDL_Surface *settings_surface = TTF_RenderText_Blended(font, "Settings", White);
   SDL_Texture *settings_text = SDL_CreateTextureFromSurface(renderer, settings_surface);
-  SDL_Surface *power_surface = TTF_RenderText_Solid(font, "Power", White);
+  SDL_Surface *power_surface = TTF_RenderText_Blended(font, "Power", White);
   SDL_Texture *power_text = SDL_CreateTextureFromSurface(renderer, power_surface);
+  SDL_Surface *time_surface = TTF_RenderText_Blended(font26, "20:21", White);
+  SDL_Texture *time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
 
   int w, h;
   SDL_QueryTexture(news_text, NULL, NULL, &w, &h);
@@ -257,6 +317,9 @@ int main(int argc, char* argv[]) {
   SDL_QueryTexture(power_text, NULL, NULL, &w, &h);
   power_text_pos.w = w;
   power_text_pos.h = h;
+  SDL_QueryTexture(time_text, NULL, NULL, &w, &h);
+  time_text_pos.w = w;
+  time_text_pos.h = h;
 
 
 
@@ -305,6 +368,24 @@ int main(int argc, char* argv[]) {
     if (power_tex){
       SDL_RenderCopy(renderer, power_tex, NULL, &power_pos);
     }
+    if (top_menu_bg_tex){
+      SDL_RenderCopy(renderer, top_menu_bg_tex, NULL, &top_menu_bg_pos);
+    }
+    if (controller_mode_tex){
+      SDL_RenderCopy(renderer, controller_mode_tex, NULL, &controller_mode_pos);
+    }
+    if (wifi_tex){
+      SDL_RenderCopy(renderer, wifi_tex, NULL, &wifi_pos);
+    }
+    if (battery_tex){
+      SDL_RenderCopy(renderer, battery_tex, NULL, &battery_pos);
+    }
+    if (avatar_tex){
+      SDL_RenderCopy(renderer, avatar_tex, NULL, &avatar_pos);
+    }
+    if (hb_tex){
+      SDL_RenderCopy(renderer, hb_tex, NULL, &hb_pos);
+    }
 
     SDL_RenderCopy(renderer, seperator_tex, NULL, &seperator_pos);
     SDL_RenderCopy(renderer, seperator2_tex, NULL, &seperator2_pos);
@@ -319,6 +400,7 @@ int main(int argc, char* argv[]) {
     SDL_RenderCopy(renderer, controller_text, NULL, &controller_text_pos);
     SDL_RenderCopy(renderer, settings_text, NULL, &settings_text_pos);
     SDL_RenderCopy(renderer, power_text, NULL, &power_text_pos);
+    SDL_RenderCopy(renderer, time_text, NULL, &time_text_pos);
 
     SDL_RenderPresent(renderer);
 
@@ -330,12 +412,14 @@ int main(int argc, char* argv[]) {
   SDL_FreeSurface(controller_surface);
   SDL_FreeSurface(settings_surface);
   SDL_FreeSurface(power_surface);
+  SDL_FreeSurface(time_surface);
   SDL_DestroyTexture(news_text);
   SDL_DestroyTexture(e_shop_text);
   SDL_DestroyTexture(album_text);
   SDL_DestroyTexture(controller_text);
   SDL_DestroyTexture(settings_text);
   SDL_DestroyTexture(power_text);
+  SDL_DestroyTexture(time_text);
   SDL_FreeSurface(windowSurface);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
