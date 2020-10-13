@@ -170,8 +170,6 @@ Without these people this project would be impossible.
 
 
 
-https://github.com/5H4D0WILA/HomeMenuNX
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/5H4D0WILA/HomeMenuNX.svg?style=flat-square
