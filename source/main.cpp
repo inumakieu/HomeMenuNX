@@ -85,6 +85,7 @@ SDL_Texture *game_title_text_tex = NULL;
 SDL_Texture *game_title_bg_tex = NULL;
 SDL_Texture *game_info_text_tex = NULL;
 SDL_Texture *game_info_bg_tex = NULL;
+SDL_Texture *mask_tex = NULL;
 
 SDL_Color White = {255, 255, 255};
 SDL_Color OffWhite = {230, 230, 230};
@@ -262,6 +263,14 @@ void init_ui(SDL_Renderer* renderer)
     game1_tex = SDL_CreateTextureFromSurface(renderer, game1);
     SDL_FreeSurface(game1);
   }
+  SDL_Surface *mask = IMG_Load("mask.png");
+  if (mask) {
+    gameicon1.w = 320;
+    gameicon1.h = 320;
+    mask_tex = SDL_CreateTextureFromSurface(renderer, mask);
+    SDL_FreeSurface(mask);
+  }
+  SDL_SetTextureBlendMode(mask_tex, SDL_BLENDMODE_MOD);
   // other titles
   SDL_Surface *game2 = IMG_Load("super-mario-oddyssey.jpg");
   if (game2) {
@@ -398,6 +407,9 @@ int main(int argc, char* argv[]) {
     }
     if (game1_tex){
       SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
+    }
+    if (mask_tex){
+      SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon1);
     }
     if (game2_tex){
       SDL_RenderCopy(renderer, game2_tex, NULL, &gameicon2);
