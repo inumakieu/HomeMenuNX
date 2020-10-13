@@ -75,7 +75,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![UI Screenshot][product-screenshot]](https://i.ibb.co/mvJmZzK/screenshot.jpg)
+[![UI Screenshot](https://iili.io/2ZmNSe.md.jpg)](https://freeimage.host/i/2ZmNSe)
 
 HomeMenuNX tries to give the user a simple yet powerful design that feels intuitive to use, while also trying to be as customizable as possible.
 
