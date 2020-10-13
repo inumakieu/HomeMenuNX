@@ -99,7 +99,7 @@ If you want to compile for yourself, please follow the instructions below.
 
 You need devkitPro in order to compile this, along with libnx and SDL2.
 To install all of them, follow the instructions for installing devkitPro from the official installation guide at: https://github.com/devkitPro/pacman/releases/tag/v1.0.2
-After you install (dpk-)pacman successfully, run the command below to install the sdl2 dependencies
+After you install (dkp-)pacman successfully, run the command below to install the sdl2 dependencies
 ```sh
 sudo dkp-pacman -S switch-sdl2 switch-sdl2_gfx switch-sdl2_image switch-sdl2_mixer switch-sdl2_net switch-sdl2_ttf
 ```
