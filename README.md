@@ -170,20 +170,20 @@ Without these people this project would be impossible.
 
 
 
-
+https://github.com/5H4D0WILA/HomeMenuNX
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=flat-square
-[contributors-url]: https://github.com/github_username/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=flat-square
-[forks-url]: https://github.com/github_username/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=flat-square
-[stars-url]: https://github.com/github_username/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=flat-square
-[issues-url]: https://github.com/github_username/repo/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=flat-square
-[license-url]: https://github.com/github_username/repo/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/5H4D0WILA/HomeMenuNX.svg?style=flat-square
+[contributors-url]: https://github.com/5H4D0WILA/HomeMenuNX/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/5H4D0WILA/HomeMenuNX.svg?style=flat-square
+[forks-url]: https://github.com/5H4D0WILA/HomeMenuNX/network/members
+[stars-shield]: https://img.shields.io/github/stars/5H4D0WILA/HomeMenuNX.svg?style=flat-square
+[stars-url]: https://github.com/5H4D0WILA/HomeMenuNX/stargazers
+[issues-shield]: https://img.shields.io/github/issues/5H4D0WILA/HomeMenuNX.svg?style=flat-square
+[issues-url]: https://github.com/5H4D0WILA/HomeMenuNX/issues
+[license-shield]: https://img.shields.io/github/license/5H4D0WILA/HomeMenuNX.svg?style=flat-square
+[license-url]: https://github.com/5H4D0WILA/HomeMenuNX/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/github_username
 [product-screenshot]: images/screenshot.png
