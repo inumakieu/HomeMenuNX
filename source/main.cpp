@@ -91,449 +91,444 @@ SDL_Texture *maskedTex = NULL;
 SDL_Color White = {255, 255, 255};
 SDL_Color OffWhite = {230, 230, 230};
 SDL_Color DarkGrey = {11, 11, 11};
-SDL_BlendMode mask_mode = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_SRC_COLOR,
-  SDL_BLENDFACTOR_SRC_COLOR,
-  SDL_BLENDOPERATION_MAXIMUM,
-  SDL_BLENDFACTOR_SRC_ALPHA,
-  SDL_BLENDFACTOR_DST_ALPHA,
-  SDL_BLENDOPERATION_MINIMUM);
-
-  void init_ui(SDL_Renderer* renderer)
-  {
-    // wallpaper
-    SDL_Surface *wallpaper = IMG_Load("wallpaper.png");
-    if (wallpaper) {
-      wallpaper_pos.w = 1280;
-      wallpaper_pos.h = 720;
-      wallpaper_tex = SDL_CreateTextureFromSurface(renderer, wallpaper);
-      SDL_FreeSurface(wallpaper);
-    }
-
-    // icons menu (left)
-    // bg
-    SDL_Surface *icons_bg = IMG_Load("icons_bg.png");
-    if (icons_bg) {
-      icons_bg_pos.w = 240;
-      icons_bg_pos.h = 500;
-      icons_bg_tex = SDL_CreateTextureFromSurface(renderer, icons_bg);
-      SDL_FreeSurface(icons_bg);
-    }
-    // icons
-    SDL_Surface *news = IMG_Load("news.png");
-    if (news) {
-      news_pos.w = 35;
-      news_pos.h = 33;
-      news_tex = SDL_CreateTextureFromSurface(renderer, news);
-      SDL_FreeSurface(news);
-    }
-    SDL_Surface *e_shop = IMG_Load("e-shop.png");
-    if (e_shop) {
-      e_shop_pos.w = 30;
-      e_shop_pos.h = 30;
-      e_shop_tex = SDL_CreateTextureFromSurface(renderer, e_shop);
-      SDL_FreeSurface(e_shop);
-    }
-    SDL_Surface *album = IMG_Load("album.png");
-    if (album) {
-      album_pos.w = 35;
-      album_pos.h = 23;
-      album_tex = SDL_CreateTextureFromSurface(renderer, album);
-      SDL_FreeSurface(album);
-    }
-    SDL_Surface *controller = IMG_Load("controller.png");
-    if (controller) {
-      controller_pos.w = 34;
-      controller_pos.h = 33;
-      controller_tex = SDL_CreateTextureFromSurface(renderer, controller);
-      SDL_FreeSurface(controller);
-    }
-    SDL_Surface *settings = IMG_Load("settings.png");
-    if (settings) {
-      settings_pos.w = 35;
-      settings_pos.h = 36;
-      settings_tex = SDL_CreateTextureFromSurface(renderer, settings);
-      SDL_FreeSurface(settings);
-    }
-    SDL_Surface *power = IMG_Load("power.png");
-    if (power) {
-      power_pos.w = 28;
-      power_pos.h = 33;
-      power_tex = SDL_CreateTextureFromSurface(renderer, power);
-      SDL_FreeSurface(power);
-    }
-    SDL_Surface *seperator = IMG_Load("seperator.png");
-    if (seperator) {
-      seperator_pos.w = 190;
-      seperator_pos.h = 5;
-      seperator_tex = SDL_CreateTextureFromSurface(renderer, seperator);
-      SDL_FreeSurface(seperator);
-    }
-    SDL_Surface *seperator2 = IMG_Load("seperator.png");
-    if (seperator2) {
-      seperator2_pos.w = 190;
-      seperator2_pos.h = 5;
-      seperator2_tex = SDL_CreateTextureFromSurface(renderer, seperator2);
-      SDL_FreeSurface(seperator2);
-    }
-    SDL_Surface *seperator3 = IMG_Load("seperator.png");
-    if (seperator3) {
-      seperator3_pos.w = 190;
-      seperator3_pos.h = 5;
-      seperator3_tex = SDL_CreateTextureFromSurface(renderer, seperator3);
-      SDL_FreeSurface(seperator3);
-    }
-    SDL_Surface *seperator4 = IMG_Load("seperator.png");
-    if (seperator4) {
-      seperator4_pos.w = 190;
-      seperator4_pos.h = 5;
-      seperator4_tex = SDL_CreateTextureFromSurface(renderer, seperator4);
-      SDL_FreeSurface(seperator4);
-    }
-    SDL_Surface *seperator5 = IMG_Load("seperator.png");
-    if (seperator5) {
-      seperator5_pos.w = 190;
-      seperator5_pos.h = 5;
-      seperator5_tex = SDL_CreateTextureFromSurface(renderer, seperator5);
-      SDL_FreeSurface(seperator5);
-    }
-
-    // top menu
-    // bg
-    SDL_Surface *top_menu_bg = IMG_Load("top_bg.png");
-    if (top_menu_bg) {
-      top_menu_bg_pos.w = 425;
-      top_menu_bg_pos.h = 50;
-      top_menu_bg_tex = SDL_CreateTextureFromSurface(renderer, top_menu_bg);
-      SDL_FreeSurface(top_menu_bg);
-    }
-    SDL_Surface *controller_mode = IMG_Load("handheld.png");
-    if (controller_mode) {
-      controller_mode_pos.w = 58;
-      controller_mode_pos.h = 58;
-      controller_mode_tex = SDL_CreateTextureFromSurface(renderer, controller_mode);
-      SDL_FreeSurface(controller_mode);
-    }
-    SDL_Surface *wifi = IMG_Load("wifi.png");
-    if (wifi) {
-      wifi_pos.w = 20;
-      wifi_pos.h = 20;
-      wifi_tex = SDL_CreateTextureFromSurface(renderer, wifi);
-      SDL_FreeSurface(wifi);
-    }
-    SDL_Surface *battery = IMG_Load("battery.png");
-    if (battery) {
-      battery_pos.w = 31;
-      battery_pos.h = 15;
-      battery_tex = SDL_CreateTextureFromSurface(renderer, battery);
-      SDL_FreeSurface(battery);
-    }
-
-    // avatar & hb menu
-
-    SDL_Surface *avatar = IMG_Load("avatar.png");
-    if (avatar) {
-      avatar_pos.w = 60;
-      avatar_pos.h = 60;
-      avatar_tex = SDL_CreateTextureFromSurface(renderer, avatar);
-      SDL_FreeSurface(avatar);
-    }
-    SDL_Surface *hb = IMG_Load("hb_menu.png");
-    if (hb) {
-      hb_pos.w = 60;
-      hb_pos.h = 60;
-      hb_tex = SDL_CreateTextureFromSurface(renderer, hb);
-      SDL_FreeSurface(hb);
-    }
-
-    // game info
-    SDL_Surface *game_title_bg = IMG_Load("gamename_bg.png");
-    if (game_title_bg) {
-      game_title_bg_pos.w = 640;
-      game_title_bg_pos.h = 50;
-      game_title_bg_tex = SDL_CreateTextureFromSurface(renderer, game_title_bg);
-      SDL_FreeSurface(game_title_bg);
-    }
-    SDL_Surface *game_info_bg = IMG_Load("company_bg.png");
-    if (game_info_bg) {
-      game_info_bg_pos.w = 640;
-      game_info_bg_pos.h = 50;
-      game_info_bg_tex = SDL_CreateTextureFromSurface(renderer, game_info_bg);
-      SDL_FreeSurface(game_info_bg);
-    }
-
-    // game icons
-    chdir("romfs:/assets/games/");
-    SDL_Surface *game1 = IMG_Load("genshin-impact.jpg");
-    if (game1) {
-      gameicon1.w = 320;
-      gameicon1.h = 320;
-      game1_tex = SDL_CreateTextureFromSurface(renderer, game1);
-      SDL_FreeSurface(game1);
-    }
-    SDL_Surface *mask = IMG_Load("mask.png");
-    if (mask) {
-      gameicon1.w = 320;
-      gameicon1.h = 320;
-      mask_tex = SDL_CreateTextureFromSurface(renderer, mask);
-      SDL_FreeSurface(mask);
-    }
-    maskedTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 320, 320);
 
 
-
-
-    // other titles
-    SDL_Surface *game2 = IMG_Load("super-mario-oddyssey.jpg");
-    if (game2) {
-      gameicon2.w = 260;
-      gameicon2.h = 260;
-      game2_tex = SDL_CreateTextureFromSurface(renderer, game2);
-      SDL_FreeSurface(game2);
-    }
-    SDL_Surface *game3 = IMG_Load("breath-of-the-wild.png");
-    if (game3) {
-      gameicon3.w = 260;
-      gameicon3.h = 260;
-      game3_tex = SDL_CreateTextureFromSurface(renderer, game3);
-      SDL_FreeSurface(game3);
-    }
-
-    // suspended
-    chdir("romfs:/assets/UI/");
-    SDL_Surface *suspended_bg = IMG_Load("suspended_bg.png");
-    if (suspended_bg) {
-      suspended_bg_pos.w = 155;
-      suspended_bg_pos.h = 40;
-      suspended_bg_tex = SDL_CreateTextureFromSurface(renderer, suspended_bg);
-      SDL_FreeSurface(suspended_bg);
-    }
-
+void init_ui(SDL_Renderer* renderer)
+{
+  // wallpaper
+  SDL_Surface *wallpaper = IMG_Load("wallpaper.png");
+  if (wallpaper) {
+    wallpaper_pos.w = 1280;
+    wallpaper_pos.h = 720;
+    wallpaper_tex = SDL_CreateTextureFromSurface(renderer, wallpaper);
+    SDL_FreeSurface(wallpaper);
   }
 
-  void draw_ui()
-  {
-
+  // icons menu (left)
+  // bg
+  SDL_Surface *icons_bg = IMG_Load("icons_bg.png");
+  if (icons_bg) {
+    icons_bg_pos.w = 240;
+    icons_bg_pos.h = 500;
+    icons_bg_tex = SDL_CreateTextureFromSurface(renderer, icons_bg);
+    SDL_FreeSurface(icons_bg);
+  }
+  // icons
+  SDL_Surface *news = IMG_Load("news.png");
+  if (news) {
+    news_pos.w = 35;
+    news_pos.h = 33;
+    news_tex = SDL_CreateTextureFromSurface(renderer, news);
+    SDL_FreeSurface(news);
+  }
+  SDL_Surface *e_shop = IMG_Load("e-shop.png");
+  if (e_shop) {
+    e_shop_pos.w = 30;
+    e_shop_pos.h = 30;
+    e_shop_tex = SDL_CreateTextureFromSurface(renderer, e_shop);
+    SDL_FreeSurface(e_shop);
+  }
+  SDL_Surface *album = IMG_Load("album.png");
+  if (album) {
+    album_pos.w = 35;
+    album_pos.h = 23;
+    album_tex = SDL_CreateTextureFromSurface(renderer, album);
+    SDL_FreeSurface(album);
+  }
+  SDL_Surface *controller = IMG_Load("controller.png");
+  if (controller) {
+    controller_pos.w = 34;
+    controller_pos.h = 33;
+    controller_tex = SDL_CreateTextureFromSurface(renderer, controller);
+    SDL_FreeSurface(controller);
+  }
+  SDL_Surface *settings = IMG_Load("settings.png");
+  if (settings) {
+    settings_pos.w = 35;
+    settings_pos.h = 36;
+    settings_tex = SDL_CreateTextureFromSurface(renderer, settings);
+    SDL_FreeSurface(settings);
+  }
+  SDL_Surface *power = IMG_Load("power.png");
+  if (power) {
+    power_pos.w = 28;
+    power_pos.h = 33;
+    power_tex = SDL_CreateTextureFromSurface(renderer, power);
+    SDL_FreeSurface(power);
+  }
+  SDL_Surface *seperator = IMG_Load("seperator.png");
+  if (seperator) {
+    seperator_pos.w = 190;
+    seperator_pos.h = 5;
+    seperator_tex = SDL_CreateTextureFromSurface(renderer, seperator);
+    SDL_FreeSurface(seperator);
+  }
+  SDL_Surface *seperator2 = IMG_Load("seperator.png");
+  if (seperator2) {
+    seperator2_pos.w = 190;
+    seperator2_pos.h = 5;
+    seperator2_tex = SDL_CreateTextureFromSurface(renderer, seperator2);
+    SDL_FreeSurface(seperator2);
+  }
+  SDL_Surface *seperator3 = IMG_Load("seperator.png");
+  if (seperator3) {
+    seperator3_pos.w = 190;
+    seperator3_pos.h = 5;
+    seperator3_tex = SDL_CreateTextureFromSurface(renderer, seperator3);
+    SDL_FreeSurface(seperator3);
+  }
+  SDL_Surface *seperator4 = IMG_Load("seperator.png");
+  if (seperator4) {
+    seperator4_pos.w = 190;
+    seperator4_pos.h = 5;
+    seperator4_tex = SDL_CreateTextureFromSurface(renderer, seperator4);
+    SDL_FreeSurface(seperator4);
+  }
+  SDL_Surface *seperator5 = IMG_Load("seperator.png");
+  if (seperator5) {
+    seperator5_pos.w = 190;
+    seperator5_pos.h = 5;
+    seperator5_tex = SDL_CreateTextureFromSurface(renderer, seperator5);
+    SDL_FreeSurface(seperator5);
   }
 
-  int main(int argc, char* argv[]) {
-    SDL_Init(SDL_INIT_EVERYTHING);
+  // top menu
+  // bg
+  SDL_Surface *top_menu_bg = IMG_Load("top_bg.png");
+  if (top_menu_bg) {
+    top_menu_bg_pos.w = 425;
+    top_menu_bg_pos.h = 50;
+    top_menu_bg_tex = SDL_CreateTextureFromSurface(renderer, top_menu_bg);
+    SDL_FreeSurface(top_menu_bg);
+  }
+  SDL_Surface *controller_mode = IMG_Load("handheld.png");
+  if (controller_mode) {
+    controller_mode_pos.w = 58;
+    controller_mode_pos.h = 58;
+    controller_mode_tex = SDL_CreateTextureFromSurface(renderer, controller_mode);
+    SDL_FreeSurface(controller_mode);
+  }
+  SDL_Surface *wifi = IMG_Load("wifi.png");
+  if (wifi) {
+    wifi_pos.w = 20;
+    wifi_pos.h = 20;
+    wifi_tex = SDL_CreateTextureFromSurface(renderer, wifi);
+    SDL_FreeSurface(wifi);
+  }
+  SDL_Surface *battery = IMG_Load("battery.png");
+  if (battery) {
+    battery_pos.w = 31;
+    battery_pos.h = 15;
+    battery_tex = SDL_CreateTextureFromSurface(renderer, battery);
+    SDL_FreeSurface(battery);
+  }
 
-    romfsInit();
-    chdir("romfs:/assets/UI/");
+  // avatar & hb menu
 
-    TTF_Init();
+  SDL_Surface *avatar = IMG_Load("avatar.png");
+  if (avatar) {
+    avatar_pos.w = 60;
+    avatar_pos.h = 60;
+    avatar_tex = SDL_CreateTextureFromSurface(renderer, avatar);
+    SDL_FreeSurface(avatar);
+  }
+  SDL_Surface *hb = IMG_Load("hb_menu.png");
+  if (hb) {
+    hb_pos.w = 60;
+    hb_pos.h = 60;
+    hb_tex = SDL_CreateTextureFromSurface(renderer, hb);
+    SDL_FreeSurface(hb);
+  }
 
-    /*gfxInitDefault();
-    consoleInit(nullptr);*/
+  // game info
+  SDL_Surface *game_title_bg = IMG_Load("gamename_bg.png");
+  if (game_title_bg) {
+    game_title_bg_pos.w = 640;
+    game_title_bg_pos.h = 50;
+    game_title_bg_tex = SDL_CreateTextureFromSurface(renderer, game_title_bg);
+    SDL_FreeSurface(game_title_bg);
+  }
+  SDL_Surface *game_info_bg = IMG_Load("company_bg.png");
+  if (game_info_bg) {
+    game_info_bg_pos.w = 640;
+    game_info_bg_pos.h = 50;
+    game_info_bg_tex = SDL_CreateTextureFromSurface(renderer, game_info_bg);
+    SDL_FreeSurface(game_info_bg);
+  }
 
-    //Switch screen size: 720p. Must set to full screen.
-    SDL_Window* window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_FULLSCREEN);
-    if (!window) SDL_Quit();
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_SOFTWARE);
-    if (!renderer) SDL_Quit();
-    SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+  // game icons
+  chdir("romfs:/assets/games/");
+  SDL_Surface *game1 = IMG_Load("genshin-impact.png");
+  if (game1) {
+    gameicon1.w = 320;
+    gameicon1.h = 320;
+    game1_tex = SDL_CreateTextureFromSurface(renderer, game1);
+    SDL_FreeSurface(game1);
+  }
 
-    init_ui(renderer);
+  // other titles
+  SDL_Surface *game2 = IMG_Load("super-mario-oddyssey.png");
+  if (game2) {
+    gameicon2.w = 260;
+    gameicon2.h = 260;
+    game2_tex = SDL_CreateTextureFromSurface(renderer, game2);
+    SDL_FreeSurface(game2);
+  }
+  SDL_Surface *mask = IMG_Load("mask.png");
+  if (mask) {
+    gameicon2.w = 260;
+    gameicon2.h = 260;
+    mask_tex = SDL_CreateTextureFromSurface(renderer, mask);
+    SDL_FreeSurface(mask);
+  }
+  maskedTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 260, 260);
 
-    chdir("romfs:/assets/UI/");
-    TTF_Font* font14 = TTF_OpenFont("font.ttf", 14);
-    TTF_Font* font = TTF_OpenFont("font.ttf", 18);
-    TTF_Font* font26 = TTF_OpenFont("font.ttf", 26);
-    TTF_Font* font30 = TTF_OpenFont("font.ttf", 30);
+  // Draw masked tex
+  SDL_SetTextureBlendMode(maskedTex, SDL_BLENDMODE_BLEND);
+  SDL_SetTextureBlendMode(game2_tex, SDL_BLENDMODE_MOD);
+  SDL_SetRenderTarget(renderer, maskedTex);
+	SDL_Rect dst = {0, 0, 260, 260};
 
+  SDL_RenderCopy(renderer, mask_tex, NULL, &dst);
+  SDL_RenderCopy(renderer, game2_tex, NULL, &dst);
+  SDL_SetRenderTarget(renderer, NULL);
 
-    SDL_Surface *news_surface = TTF_RenderText_Blended(font, "News", White);
-    SDL_Texture *news_text = SDL_CreateTextureFromSurface(renderer, news_surface);
-    SDL_Surface *e_shop_surface = TTF_RenderText_Blended(font, "E-Shop", White);
-    SDL_Texture *e_shop_text = SDL_CreateTextureFromSurface(renderer, e_shop_surface);
-    SDL_Surface *album_surface = TTF_RenderText_Blended(font, "Album", White);
-    SDL_Texture *album_text = SDL_CreateTextureFromSurface(renderer, album_surface);
-    SDL_Surface *controller_surface = TTF_RenderText_Blended(font, "Controller", White);
-    SDL_Texture *controller_text = SDL_CreateTextureFromSurface(renderer, controller_surface);
-    SDL_Surface *settings_surface = TTF_RenderText_Blended(font, "Settings", White);
-    SDL_Texture *settings_text = SDL_CreateTextureFromSurface(renderer, settings_surface);
-    SDL_Surface *power_surface = TTF_RenderText_Blended(font, "Power", White);
-    SDL_Texture *power_text = SDL_CreateTextureFromSurface(renderer, power_surface);
-    SDL_Surface *time_surface = TTF_RenderText_Blended(font26, "20:21", White);
-    SDL_Texture *time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
-    SDL_Surface *suspended_text_surface = TTF_RenderText_Blended(font14, "SUSPENDED", White);
-    SDL_Texture *suspended_text = SDL_CreateTextureFromSurface(renderer, suspended_text_surface);
-    SDL_Surface *game_title_text_surface = TTF_RenderText_Blended(font30, "Genshin Impact", OffWhite);
-    SDL_Texture *game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
-    SDL_Surface *game_info_text_surface = TTF_RenderText_Blended(font, "miHoYo, 1.0.0", DarkGrey);
-    SDL_Texture *game_info_text = SDL_CreateTextureFromSurface(renderer, game_info_text_surface);
+  SDL_Surface *game3 = IMG_Load("breath-of-the-wild.png");
+  if (game3) {
+    gameicon3.w = 260;
+    gameicon3.h = 260;
+    game3_tex = SDL_CreateTextureFromSurface(renderer, game3);
+    SDL_FreeSurface(game3);
+  }
 
-    int w, h;
-    SDL_QueryTexture(news_text, NULL, NULL, &w, &h);
-    news_text_pos.w = w;
-    news_text_pos.h = h;
-    SDL_QueryTexture(e_shop_text, NULL, NULL, &w, &h);
-    e_shop_text_pos.w = w;
-    e_shop_text_pos.h = h;
-    SDL_QueryTexture(album_text, NULL, NULL, &w, &h);
-    album_text_pos.w = w;
-    album_text_pos.h = h;
-    SDL_QueryTexture(controller_text, NULL, NULL, &w, &h);
-    controller_text_pos.w = w;
-    controller_text_pos.h = h;
-    SDL_QueryTexture(settings_text, NULL, NULL, &w, &h);
-    settings_text_pos.w = w;
-    settings_text_pos.h = h;
-    SDL_QueryTexture(power_text, NULL, NULL, &w, &h);
-    power_text_pos.w = w;
-    power_text_pos.h = h;
-    SDL_QueryTexture(time_text, NULL, NULL, &w, &h);
-    time_text_pos.w = w;
-    time_text_pos.h = h;
-    SDL_QueryTexture(suspended_text, NULL, NULL, &w, &h);
-    suspended_text_pos.w = w;
-    suspended_text_pos.h = h;
-    SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
-    game_title_text_pos.x = 1280 - w - 20;
-    game_title_text_pos.w = w;
-    game_title_text_pos.h = h;
-    game_title_bg_pos.x = game_title_text_pos.x - 20;
-    SDL_QueryTexture(game_info_text, NULL, NULL, &w, &h);
-    game_info_text_pos.x = 1280 - w - 10;
-    game_info_text_pos.w = w;
-    game_info_text_pos.h = h;
-    game_info_bg_pos.x = game_info_text_pos.x - 20;
+  // suspended
+  chdir("romfs:/assets/UI/");
+  SDL_Surface *suspended_bg = IMG_Load("suspended_bg.png");
+  if (suspended_bg) {
+    suspended_bg_pos.w = 155;
+    suspended_bg_pos.h = 40;
+    suspended_bg_tex = SDL_CreateTextureFromSurface(renderer, suspended_bg);
+    SDL_FreeSurface(suspended_bg);
+  }
 
+}
 
+void draw_ui()
+{
 
-    while (appletMainLoop()) {
-      hidScanInput();
+}
 
-      u32 keyDown = hidKeysDown(CONTROLLER_P1_AUTO);
-      if (keyDown & KEY_PLUS)
-      break;
+int main(int argc, char* argv[]) {
+  SDL_Init(SDL_INIT_EVERYTHING);
 
-      SDL_RenderClear(renderer);
+  romfsInit();
+  chdir("romfs:/assets/UI/");
 
+  TTF_Init();
 
+  /*gfxInitDefault();
+  consoleInit(nullptr);*/
 
-      //draw_ui(renderer, 1280, 720);
-      if (wallpaper_tex){
-        SDL_RenderCopy(renderer, wallpaper_tex, NULL, &wallpaper_pos);
-      }
+  //Switch screen size: 720p. Must set to full screen.
+  SDL_Window* window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_FULLSCREEN);
+  if (!window) SDL_Quit();
+  SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
+  if (!renderer) SDL_Quit();
+  SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
 
-      // Draw masked tex
-      SDL_SetTextureBlendMode(maskedTex, SDL_BLENDMODE_BLEND);
-      SDL_SetTextureBlendMode(game1_tex, SDL_BLENDMODE_MOD);
-      SDL_SetRenderTarget(renderer, maskedTex);
+  init_ui(renderer);
 
-      SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon1);
-      SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
-      SDL_SetRenderTarget(renderer, NULL);
-      
-      //SDL_SetTextureBlendMode(game1_tex, mask_mode);
-      //if (game1_tex){
-        //SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
-      //}
-      //if (mask_tex){
-        //SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon1);
-      //}
-      if (game2_tex){
-        SDL_RenderCopy(renderer, game2_tex, NULL, &gameicon2);
-      }
-      if (game3_tex){
-        SDL_RenderCopy(renderer, game3_tex, NULL, &gameicon3);
-      }
-      if (icons_bg_tex){
-        SDL_RenderCopy(renderer, icons_bg_tex, NULL, &icons_bg_pos);
-      }
-      if (news_tex){
-        SDL_RenderCopy(renderer, news_tex, NULL, &news_pos);
-      }
-      if (e_shop_tex){
-        SDL_RenderCopy(renderer, e_shop_tex, NULL, &e_shop_pos);
-      }
-      if (album_tex){
-        SDL_RenderCopy(renderer, album_tex, NULL, &album_pos);
-      }
-      if (controller_tex){
-        SDL_RenderCopy(renderer, controller_tex, NULL, &controller_pos);
-      }
-      if (settings_tex){
-        SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
-      }
-      if (power_tex){
-        SDL_RenderCopy(renderer, power_tex, NULL, &power_pos);
-      }
-      if (top_menu_bg_tex){
-        SDL_RenderCopy(renderer, top_menu_bg_tex, NULL, &top_menu_bg_pos);
-      }
-      if (controller_mode_tex){
-        SDL_RenderCopy(renderer, controller_mode_tex, NULL, &controller_mode_pos);
-      }
-      if (wifi_tex){
-        SDL_RenderCopy(renderer, wifi_tex, NULL, &wifi_pos);
-      }
-      if (battery_tex){
-        SDL_RenderCopy(renderer, battery_tex, NULL, &battery_pos);
-      }
-      if (avatar_tex){
-        SDL_RenderCopy(renderer, avatar_tex, NULL, &avatar_pos);
-      }
-      if (hb_tex){
-        SDL_RenderCopy(renderer, hb_tex, NULL, &hb_pos);
-      }
-      if (suspended_bg_tex){
-        SDL_RenderCopy(renderer, suspended_bg_tex, NULL, &suspended_bg_pos);
-      }
-      if (game_info_bg_tex){
-        SDL_RenderCopy(renderer, game_info_bg_tex, NULL, &game_info_bg_pos);
-      }
-      if (game_title_bg_tex){
-        SDL_RenderCopy(renderer, game_title_bg_tex, NULL, &game_title_bg_pos);
-      }
-
-      SDL_RenderCopy(renderer, seperator_tex, NULL, &seperator_pos);
-      SDL_RenderCopy(renderer, seperator2_tex, NULL, &seperator2_pos);
-      SDL_RenderCopy(renderer, seperator3_tex, NULL, &seperator3_pos);
-      SDL_RenderCopy(renderer, seperator4_tex, NULL, &seperator4_pos);
-      SDL_RenderCopy(renderer, seperator5_tex, NULL, &seperator5_pos);
+  chdir("romfs:/assets/UI/");
+  TTF_Font* font14 = TTF_OpenFont("font.ttf", 14);
+  TTF_Font* font = TTF_OpenFont("font.ttf", 18);
+  TTF_Font* font26 = TTF_OpenFont("font.ttf", 26);
+  TTF_Font* font30 = TTF_OpenFont("font.ttf", 30);
 
 
-      SDL_RenderCopy(renderer, news_text, NULL, &news_text_pos);
-      SDL_RenderCopy(renderer, e_shop_text, NULL, &e_shop_text_pos);
-      SDL_RenderCopy(renderer, album_text, NULL, &album_text_pos);
-      SDL_RenderCopy(renderer, controller_text, NULL, &controller_text_pos);
-      SDL_RenderCopy(renderer, settings_text, NULL, &settings_text_pos);
-      SDL_RenderCopy(renderer, power_text, NULL, &power_text_pos);
-      SDL_RenderCopy(renderer, time_text, NULL, &time_text_pos);
-      SDL_RenderCopy(renderer, suspended_text, NULL, &suspended_text_pos);
-      SDL_RenderCopy(renderer, game_title_text, NULL, &game_title_text_pos);
-      SDL_RenderCopy(renderer, game_info_text, NULL, &game_info_text_pos);
+  SDL_Surface *news_surface = TTF_RenderText_Blended(font, "News", White);
+  SDL_Texture *news_text = SDL_CreateTextureFromSurface(renderer, news_surface);
+  SDL_Surface *e_shop_surface = TTF_RenderText_Blended(font, "E-Shop", White);
+  SDL_Texture *e_shop_text = SDL_CreateTextureFromSurface(renderer, e_shop_surface);
+  SDL_Surface *album_surface = TTF_RenderText_Blended(font, "Album", White);
+  SDL_Texture *album_text = SDL_CreateTextureFromSurface(renderer, album_surface);
+  SDL_Surface *controller_surface = TTF_RenderText_Blended(font, "Controller", White);
+  SDL_Texture *controller_text = SDL_CreateTextureFromSurface(renderer, controller_surface);
+  SDL_Surface *settings_surface = TTF_RenderText_Blended(font, "Settings", White);
+  SDL_Texture *settings_text = SDL_CreateTextureFromSurface(renderer, settings_surface);
+  SDL_Surface *power_surface = TTF_RenderText_Blended(font, "Power", White);
+  SDL_Texture *power_text = SDL_CreateTextureFromSurface(renderer, power_surface);
+  SDL_Surface *time_surface = TTF_RenderText_Blended(font26, "20:21", White);
+  SDL_Texture *time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
+  SDL_Surface *suspended_text_surface = TTF_RenderText_Blended(font14, "SUSPENDED", White);
+  SDL_Texture *suspended_text = SDL_CreateTextureFromSurface(renderer, suspended_text_surface);
+  SDL_Surface *game_title_text_surface = TTF_RenderText_Blended(font30, "Genshin Impact", OffWhite);
+  SDL_Texture *game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
+  SDL_Surface *game_info_text_surface = TTF_RenderText_Blended(font, "miHoYo, 1.0.0", DarkGrey);
+  SDL_Texture *game_info_text = SDL_CreateTextureFromSurface(renderer, game_info_text_surface);
 
-      SDL_RenderPresent(renderer);
+  int w, h;
+  SDL_QueryTexture(news_text, NULL, NULL, &w, &h);
+  news_text_pos.w = w;
+  news_text_pos.h = h;
+  SDL_QueryTexture(e_shop_text, NULL, NULL, &w, &h);
+  e_shop_text_pos.w = w;
+  e_shop_text_pos.h = h;
+  SDL_QueryTexture(album_text, NULL, NULL, &w, &h);
+  album_text_pos.w = w;
+  album_text_pos.h = h;
+  SDL_QueryTexture(controller_text, NULL, NULL, &w, &h);
+  controller_text_pos.w = w;
+  controller_text_pos.h = h;
+  SDL_QueryTexture(settings_text, NULL, NULL, &w, &h);
+  settings_text_pos.w = w;
+  settings_text_pos.h = h;
+  SDL_QueryTexture(power_text, NULL, NULL, &w, &h);
+  power_text_pos.w = w;
+  power_text_pos.h = h;
+  SDL_QueryTexture(time_text, NULL, NULL, &w, &h);
+  time_text_pos.w = w;
+  time_text_pos.h = h;
+  SDL_QueryTexture(suspended_text, NULL, NULL, &w, &h);
+  suspended_text_pos.w = w;
+  suspended_text_pos.h = h;
+  SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
+  game_title_text_pos.x = 1280 - w - 20;
+  game_title_text_pos.w = w;
+  game_title_text_pos.h = h;
+  game_title_bg_pos.x = game_title_text_pos.x - 20;
+  SDL_QueryTexture(game_info_text, NULL, NULL, &w, &h);
+  game_info_text_pos.x = 1280 - w - 10;
+  game_info_text_pos.w = w;
+  game_info_text_pos.h = h;
+  game_info_bg_pos.x = game_info_text_pos.x - 20;
 
-      SDL_Delay(1);
+
+
+  while (appletMainLoop()) {
+    hidScanInput();
+
+    u32 keyDown = hidKeysDown(CONTROLLER_P1_AUTO);
+    if (keyDown & KEY_PLUS)
+    break;
+
+    SDL_RenderClear(renderer);
+
+    //draw_ui(renderer, 1280, 720);
+    if (wallpaper_tex){
+      SDL_RenderCopy(renderer, wallpaper_tex, NULL, &wallpaper_pos);
     }
-    SDL_FreeSurface(news_surface);
-    SDL_FreeSurface(e_shop_surface);
-    SDL_FreeSurface(album_surface);
-    SDL_FreeSurface(controller_surface);
-    SDL_FreeSurface(settings_surface);
-    SDL_FreeSurface(power_surface);
-    SDL_FreeSurface(time_surface);
-    SDL_FreeSurface(game_title_text_surface);
-    SDL_FreeSurface(game_info_text_surface);
-    SDL_DestroyTexture(news_text);
-    SDL_DestroyTexture(e_shop_text);
-    SDL_DestroyTexture(album_text);
-    SDL_DestroyTexture(controller_text);
-    SDL_DestroyTexture(settings_text);
-    SDL_DestroyTexture(power_text);
-    SDL_DestroyTexture(time_text);
-    SDL_DestroyTexture(game_title_text);
-    SDL_DestroyTexture(game_info_text);
-    SDL_FreeSurface(windowSurface);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
 
-    SDL_Quit();
+    //SDL_SetTextureBlendMode(game1_tex, mask_mode);
+    //if (game1_tex){
+    //SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
+    //}
+    //if (mask_tex){
+    //SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon1);
+    //}
+    SDL_RenderCopy(renderer, maskedTex, NULL, &gameicon2);
+    //SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon2);
+    //if (game2_tex){
+    //SDL_RenderCopy(renderer, game2_tex, NULL, &gameicon2);
+    //}
+    if (game3_tex){
+      SDL_RenderCopy(renderer, game3_tex, NULL, &gameicon3);
+    }
+    if (icons_bg_tex){
+      SDL_RenderCopy(renderer, icons_bg_tex, NULL, &icons_bg_pos);
+    }
+    if (news_tex){
+      SDL_RenderCopy(renderer, news_tex, NULL, &news_pos);
+    }
+    if (e_shop_tex){
+      SDL_RenderCopy(renderer, e_shop_tex, NULL, &e_shop_pos);
+    }
+    if (album_tex){
+      SDL_RenderCopy(renderer, album_tex, NULL, &album_pos);
+    }
+    if (controller_tex){
+      SDL_RenderCopy(renderer, controller_tex, NULL, &controller_pos);
+    }
+    if (settings_tex){
+      SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
+    }
+    if (power_tex){
+      SDL_RenderCopy(renderer, power_tex, NULL, &power_pos);
+    }
+    if (top_menu_bg_tex){
+      SDL_RenderCopy(renderer, top_menu_bg_tex, NULL, &top_menu_bg_pos);
+    }
+    if (controller_mode_tex){
+      SDL_RenderCopy(renderer, controller_mode_tex, NULL, &controller_mode_pos);
+    }
+    if (wifi_tex){
+      SDL_RenderCopy(renderer, wifi_tex, NULL, &wifi_pos);
+    }
+    if (battery_tex){
+      SDL_RenderCopy(renderer, battery_tex, NULL, &battery_pos);
+    }
+    if (avatar_tex){
+      SDL_RenderCopy(renderer, avatar_tex, NULL, &avatar_pos);
+    }
+    if (hb_tex){
+      SDL_RenderCopy(renderer, hb_tex, NULL, &hb_pos);
+    }
+    if (suspended_bg_tex){
+      SDL_RenderCopy(renderer, suspended_bg_tex, NULL, &suspended_bg_pos);
+    }
+    if (game_info_bg_tex){
+      SDL_RenderCopy(renderer, game_info_bg_tex, NULL, &game_info_bg_pos);
+    }
+    if (game_title_bg_tex){
+      SDL_RenderCopy(renderer, game_title_bg_tex, NULL, &game_title_bg_pos);
+    }
 
-    //gfxExit();
-    return 0;
+    SDL_RenderCopy(renderer, seperator_tex, NULL, &seperator_pos);
+    SDL_RenderCopy(renderer, seperator2_tex, NULL, &seperator2_pos);
+    SDL_RenderCopy(renderer, seperator3_tex, NULL, &seperator3_pos);
+    SDL_RenderCopy(renderer, seperator4_tex, NULL, &seperator4_pos);
+    SDL_RenderCopy(renderer, seperator5_tex, NULL, &seperator5_pos);
+
+
+    SDL_RenderCopy(renderer, news_text, NULL, &news_text_pos);
+    SDL_RenderCopy(renderer, e_shop_text, NULL, &e_shop_text_pos);
+    SDL_RenderCopy(renderer, album_text, NULL, &album_text_pos);
+    SDL_RenderCopy(renderer, controller_text, NULL, &controller_text_pos);
+    SDL_RenderCopy(renderer, settings_text, NULL, &settings_text_pos);
+    SDL_RenderCopy(renderer, power_text, NULL, &power_text_pos);
+    SDL_RenderCopy(renderer, time_text, NULL, &time_text_pos);
+    SDL_RenderCopy(renderer, suspended_text, NULL, &suspended_text_pos);
+    SDL_RenderCopy(renderer, game_title_text, NULL, &game_title_text_pos);
+    SDL_RenderCopy(renderer, game_info_text, NULL, &game_info_text_pos);
+
+    SDL_RenderPresent(renderer);
+
+    SDL_Delay(1);
   }
+  SDL_FreeSurface(news_surface);
+  SDL_FreeSurface(e_shop_surface);
+  SDL_FreeSurface(album_surface);
+  SDL_FreeSurface(controller_surface);
+  SDL_FreeSurface(settings_surface);
+  SDL_FreeSurface(power_surface);
+  SDL_FreeSurface(time_surface);
+  SDL_FreeSurface(game_title_text_surface);
+  SDL_FreeSurface(game_info_text_surface);
+  SDL_DestroyTexture(news_text);
+  SDL_DestroyTexture(e_shop_text);
+  SDL_DestroyTexture(album_text);
+  SDL_DestroyTexture(controller_text);
+  SDL_DestroyTexture(settings_text);
+  SDL_DestroyTexture(power_text);
+  SDL_DestroyTexture(time_text);
+  SDL_DestroyTexture(game_title_text);
+  SDL_DestroyTexture(game_info_text);
+  SDL_FreeSurface(windowSurface);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+
+  SDL_Quit();
+
+  //gfxExit();
+  return 0;
+}

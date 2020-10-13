@@ -163,7 +163,7 @@ Project Link: [https://github.com/5H4D0WILA/HomeMenuNX](https://github.com/5H4D0
 ## Credits
 
 Without these people this project would be impossible.
-
+* [libertea](https://github.com/PaoloMazzon) - for figuring out how to create the rounded corners
 * [XorTroll](https://github.com/XorTroll) - For giving me the inspiration to create this and helping me when i am stuck
 * [MasaGratoR](https://github.com/masagrator) - also for helping me when i am stuck and giving me the code for getting the titles installed on the system
 * [devkitPro](https://devkitpro.org/) - without the team of devkitPro it would be impossible for projects like these to exist
