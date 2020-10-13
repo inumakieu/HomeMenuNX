@@ -75,7 +75,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![UI Screenshot][product-screenshot]](https://ibb.co/VHVdnBG)
 
 HomeMenuNX tries to give the user a simple yet powerful design that feels intuitive to use, while also trying to be as customizable as possible.
 
@@ -121,7 +121,7 @@ make
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-To use this replacement, just copy the .nro file to your switch folder and run it through hb_menuhttps://github.com/5H4D0WILA/HomeMenuNX
+To use this replacement, just copy the .nro file to your switch folder and run it through hb_menu
 
 
 
@@ -154,8 +154,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email
 
 Project Link: [https://github.com/5H4D0WILA/HomeMenuNX](https://github.com/5H4D0WILA/HomeMenuNX)
 
