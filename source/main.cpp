@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <list>
 #include <string>
+#include <map>
 
 #include <unistd.h>
 
@@ -20,18 +21,8 @@ std::list<std::string> games {
 
 SDL_Rect wallpaper_pos = { 0, 0, 0, 0 };
 
-SDL_Rect gameicon1 = { 470, 340, 0, 0 }; // icon size 320x320
-SDL_Rect gameicon2 = { 470 + 40 + 320 , 340 + 60, 0, 0 }; // icon size 260x260
-SDL_Rect gameicon3 = { 470 + 40 + 320 + 260 + 20, 340 + 60, 0, 0 }; // icon size 260x260
 SDL_Rect icons_bg_pos = { 20, 200, 0, 0 };
-SDL_Rect news_pos = { 60, 240, 0, 0 };
-SDL_Rect e_shop_pos = { 62, 316, 0, 0 };
-SDL_Rect album_pos = { 60, 400, 0, 0 };
-SDL_Rect controller_pos = { 60, 470, 0, 0 };
-SDL_Rect settings_pos = { 60, 550, 0, 0 };
-SDL_Rect power_pos = { 65, 630, 0, 0 };
-SDL_Rect avatar_pos = { 60, 40, 0, 0 };
-SDL_Rect hb_pos = { 140, 40, 0, 0 };
+
 SDL_Rect name_bg_pos = { 1020, 260, 0, 0 };
 SDL_Rect news_text_pos = { 120, 244, 0, 0 };
 SDL_Rect e_shop_text_pos = { 120, 320, 0, 0 };
@@ -39,15 +30,7 @@ SDL_Rect album_text_pos = { 120, 404, 0, 0 };
 SDL_Rect controller_text_pos = { 120, 475, 0, 0 };
 SDL_Rect settings_text_pos = { 120, 556, 0, 0 };
 SDL_Rect power_text_pos = { 120, 636, 0, 0 };
-SDL_Rect seperator_pos = { 45, 290, 0, 0 };
-SDL_Rect seperator2_pos = { 45, 370, 0, 0 };
-SDL_Rect seperator3_pos = { 45, 450, 0, 0 };
-SDL_Rect seperator4_pos = { 45, 530, 0, 0 };
-SDL_Rect seperator5_pos = { 45, 610, 0, 0 };
 SDL_Rect top_menu_bg_pos = { 420, 50, 0, 0 };
-SDL_Rect controller_mode_pos = { 445, 45, 0, 0 };
-SDL_Rect wifi_pos = { 760, 63, 0, 0 };
-SDL_Rect battery_pos = { 790, 68, 0, 0 };
 SDL_Rect time_text_pos = { 606, 60, 0, 0 };
 SDL_Rect suspended_bg_pos = { 550, 570, 0, 0 };
 SDL_Rect suspended_text_pos = { 584, 580, 0, 0 };
@@ -56,265 +39,183 @@ SDL_Rect game_title_bg_pos = { 0, 254, 0, 0 };
 SDL_Rect game_info_text_pos = { 0, 306, 0, 0 };
 SDL_Rect game_info_bg_pos = { 0, 284, 0, 0 };
 
-SDL_Texture *wallpaper_tex = NULL;
-SDL_Texture *game1_tex = NULL;
-SDL_Texture *game2_tex = NULL;
-SDL_Texture *game3_tex = NULL;
-SDL_Texture *icons_bg_tex = NULL;
-SDL_Texture *news_tex = NULL;
-SDL_Texture *e_shop_tex = NULL;
-SDL_Texture *album_tex = NULL;
-SDL_Texture *controller_tex = NULL;
-SDL_Texture *settings_tex = NULL;
-SDL_Texture *power_tex = NULL;
-SDL_Texture *avatar_tex = NULL;
-SDL_Texture *hb_tex = NULL;
-SDL_Texture *name_bg_tex = NULL;
-SDL_Texture *seperator_tex = NULL;
-SDL_Texture *seperator2_tex = NULL;
-SDL_Texture *seperator3_tex = NULL;
-SDL_Texture *seperator4_tex = NULL;
-SDL_Texture *seperator5_tex = NULL;
-SDL_Texture *top_menu_bg_tex = NULL;
-SDL_Texture *controller_mode_tex = NULL;
-SDL_Texture *wifi_tex = NULL;
-SDL_Texture *battery_tex = NULL;
-SDL_Texture *suspended_bg_tex = NULL;
-SDL_Texture *suspended_text_tex = NULL;
-SDL_Texture *game_title_text_tex = NULL;
-SDL_Texture *game_title_bg_tex = NULL;
-SDL_Texture *game_info_text_tex = NULL;
-SDL_Texture *game_info_bg_tex = NULL;
-SDL_Texture *mask_tex = NULL;
-SDL_Texture *maskedTex = NULL;
 
 SDL_Color White = {255, 255, 255};
 SDL_Color OffWhite = {230, 230, 230};
 SDL_Color DarkGrey = {11, 11, 11};
 
+SDL_Renderer* renderer;
 
-void init_ui(SDL_Renderer* renderer)
+std::map<std::string, SDL_Texture*> textureMap;
+std::map<std::string, SDL_Rect> rectMap;
+
+
+
+SDL_Texture *create_texture(std::string name, std::string filename, int w, int h, bool forceSize)
 {
-  // wallpaper
-  SDL_Surface *wallpaper = IMG_Load("wallpaper.png");
-  if (wallpaper) {
-    wallpaper_pos.w = 1280;
-    wallpaper_pos.h = 720;
-    wallpaper_tex = SDL_CreateTextureFromSurface(renderer, wallpaper);
-    SDL_FreeSurface(wallpaper);
+  SDL_Texture *temp_tex = NULL;
+  SDL_Surface *surface = IMG_Load("wallpaper.png");
+  if (surface) {
+    if (forceSize) {
+      for (auto i = rectMap.begin(); i != rectMap.end(); i++) {
+        if(i->first == name) {
+          i->second.w = w;
+          i->second.h = h;
+        }
+      }
+    }
+    temp_tex = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
   }
+  return temp_tex;
+}
 
-  // icons menu (left)
-  // bg
-  SDL_Surface *icons_bg = IMG_Load("icons_bg.png");
-  if (icons_bg) {
-    icons_bg_pos.w = 240;
-    icons_bg_pos.h = 500;
-    icons_bg_tex = SDL_CreateTextureFromSurface(renderer, icons_bg);
-    SDL_FreeSurface(icons_bg);
-  }
+SDL_Texture *create_masked_texture(std::string name, std::string filename, int w)
+{
+  // other titles
+  SDL_Texture *game = create_texture(name, filename, w, w, true);
+  SDL_Texture *mask_tex = create_texture("mask", "mask.png", w, w, true);
+
+  SDL_Texture *maskedTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, w);
+
+  SDL_SetTextureBlendMode(maskedTex, SDL_BLENDMODE_BLEND);
+  SDL_SetTextureBlendMode(game, SDL_BLENDMODE_MOD);
+  SDL_SetRenderTarget(renderer, maskedTex);
+  SDL_Rect dst = {0, 0, w, w};
+
+  SDL_RenderCopy(renderer, mask_tex, NULL, &dst);
+  SDL_RenderCopy(renderer, game, NULL, &dst);
+  SDL_SetRenderTarget(renderer, NULL);
+  return maskedTex;
+}
+
+void init_ui()
+{
+  rectMap.insert(std::pair<std::string, SDL_Rect>("wallpaper", { 0, 0, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>("wallpaper", create_texture("wallpaper", "wallpaper.png", 1280, 720, true)));
+
+  rectMap.insert(std::pair<std::string, SDL_Rect>("icons_bg", { 20, 200, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>("icons_bg", create_texture("icons_bg", "icons_bg.png", 240, 500, true)));
+
   // icons
-  SDL_Surface *news = IMG_Load("news.png");
-  if (news) {
-    news_pos.w = 35;
-    news_pos.h = 33;
-    news_tex = SDL_CreateTextureFromSurface(renderer, news);
-    SDL_FreeSurface(news);
+  std::string name;
+  SDL_Rect temp_rect = {};
+  int w, h;
+  for (auto i = 0; i < 6; i++) {
+    switch(i) {
+      case 0 :
+      name = "news";
+      temp_rect = { 60, 240, 0, 0 };
+      w = 35;
+      h = 33;
+      break;
+      case 1 :
+      name = "e_shop";
+      temp_rect = { 62, 316, 0, 0 };
+      w = 30;
+      h = 30;
+      break;
+      case 2 :
+      name = "album";
+      temp_rect = { 60, 400, 0, 0 };
+      w = 35;
+      h = 23;
+      break;
+      case 3 :
+      name = "controller";
+      temp_rect = { 60, 470, 0, 0 };
+      w = 34;
+      h = 33;
+      break;
+      case 4 :
+      name = "settings";
+      temp_rect = { 60, 550, 0, 0 };
+      w = 35;
+      h = 36;
+      break;
+      case 5 :
+      name = "power";
+      temp_rect = { 65, 630, 0, 0 };
+      w = 28;
+      h = 33;
+      break;
+    }
+    rectMap.insert(std::pair<std::string, SDL_Rect>(name, temp_rect));
+    textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", w, h, true)));
   }
-  SDL_Surface *e_shop = IMG_Load("e-shop.png");
-  if (e_shop) {
-    e_shop_pos.w = 30;
-    e_shop_pos.h = 30;
-    e_shop_tex = SDL_CreateTextureFromSurface(renderer, e_shop);
-    SDL_FreeSurface(e_shop);
-  }
-  SDL_Surface *album = IMG_Load("album.png");
-  if (album) {
-    album_pos.w = 35;
-    album_pos.h = 23;
-    album_tex = SDL_CreateTextureFromSurface(renderer, album);
-    SDL_FreeSurface(album);
-  }
-  SDL_Surface *controller = IMG_Load("controller.png");
-  if (controller) {
-    controller_pos.w = 34;
-    controller_pos.h = 33;
-    controller_tex = SDL_CreateTextureFromSurface(renderer, controller);
-    SDL_FreeSurface(controller);
-  }
-  SDL_Surface *settings = IMG_Load("settings.png");
-  if (settings) {
-    settings_pos.w = 35;
-    settings_pos.h = 36;
-    settings_tex = SDL_CreateTextureFromSurface(renderer, settings);
-    SDL_FreeSurface(settings);
-  }
-  SDL_Surface *power = IMG_Load("power.png");
-  if (power) {
-    power_pos.w = 28;
-    power_pos.h = 33;
-    power_tex = SDL_CreateTextureFromSurface(renderer, power);
-    SDL_FreeSurface(power);
-  }
-  SDL_Surface *seperator = IMG_Load("seperator.png");
-  if (seperator) {
-    seperator_pos.w = 190;
-    seperator_pos.h = 5;
-    seperator_tex = SDL_CreateTextureFromSurface(renderer, seperator);
-    SDL_FreeSurface(seperator);
-  }
-  SDL_Surface *seperator2 = IMG_Load("seperator.png");
-  if (seperator2) {
-    seperator2_pos.w = 190;
-    seperator2_pos.h = 5;
-    seperator2_tex = SDL_CreateTextureFromSurface(renderer, seperator2);
-    SDL_FreeSurface(seperator2);
-  }
-  SDL_Surface *seperator3 = IMG_Load("seperator.png");
-  if (seperator3) {
-    seperator3_pos.w = 190;
-    seperator3_pos.h = 5;
-    seperator3_tex = SDL_CreateTextureFromSurface(renderer, seperator3);
-    SDL_FreeSurface(seperator3);
-  }
-  SDL_Surface *seperator4 = IMG_Load("seperator.png");
-  if (seperator4) {
-    seperator4_pos.w = 190;
-    seperator4_pos.h = 5;
-    seperator4_tex = SDL_CreateTextureFromSurface(renderer, seperator4);
-    SDL_FreeSurface(seperator4);
-  }
-  SDL_Surface *seperator5 = IMG_Load("seperator.png");
-  if (seperator5) {
-    seperator5_pos.w = 190;
-    seperator5_pos.h = 5;
-    seperator5_tex = SDL_CreateTextureFromSurface(renderer, seperator5);
-    SDL_FreeSurface(seperator5);
+  temp_rect = { 45, 290, 0, 0};
+  name = "seperator";
+  for (auto i = 0; i < 5; i++) {
+    temp_rect.y += 80 * i;
+    rectMap.insert(std::pair<std::string, SDL_Rect>(name + std::to_string(i), temp_rect));
+    textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name + std::to_string(i), name + ".png", 190, 5, true)));
   }
 
   // top menu
   // bg
-  SDL_Surface *top_menu_bg = IMG_Load("top_bg.png");
-  if (top_menu_bg) {
-    top_menu_bg_pos.w = 425;
-    top_menu_bg_pos.h = 50;
-    top_menu_bg_tex = SDL_CreateTextureFromSurface(renderer, top_menu_bg);
-    SDL_FreeSurface(top_menu_bg);
-  }
-  SDL_Surface *controller_mode = IMG_Load("handheld.png");
-  if (controller_mode) {
-    controller_mode_pos.w = 58;
-    controller_mode_pos.h = 58;
-    controller_mode_tex = SDL_CreateTextureFromSurface(renderer, controller_mode);
-    SDL_FreeSurface(controller_mode);
-  }
-  SDL_Surface *wifi = IMG_Load("wifi.png");
-  if (wifi) {
-    wifi_pos.w = 20;
-    wifi_pos.h = 20;
-    wifi_tex = SDL_CreateTextureFromSurface(renderer, wifi);
-    SDL_FreeSurface(wifi);
-  }
-  SDL_Surface *battery = IMG_Load("battery.png");
-  if (battery) {
-    battery_pos.w = 31;
-    battery_pos.h = 15;
-    battery_tex = SDL_CreateTextureFromSurface(renderer, battery);
-    SDL_FreeSurface(battery);
-  }
+  name = "top_bg";
+  rectMap.insert(std::pair<std::string, SDL_Rect>(name, { 420, 50, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 425, 50, true)));
+  name = "handheld";
+  rectMap.insert(std::pair<std::string, SDL_Rect>(name, { 445, 45, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 58, 58, true)));
+  name = "wifi";
+  rectMap.insert(std::pair<std::string, SDL_Rect>(name, { 760, 63, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 20, 20, true)));
+  name = "battery";
+  rectMap.insert(std::pair<std::string, SDL_Rect>(name, { 790, 68, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 31, 15, true)));
 
   // avatar & hb menu
-
-  SDL_Surface *avatar = IMG_Load("avatar.png");
-  if (avatar) {
-    avatar_pos.w = 60;
-    avatar_pos.h = 60;
-    avatar_tex = SDL_CreateTextureFromSurface(renderer, avatar);
-    SDL_FreeSurface(avatar);
+  name = "avatar";
+  temp_rect = { 60, 40, 0, 0 };
+  for (auto i = 0; i < 2; i++) {
+    rectMap.insert(std::pair<std::string, SDL_Rect>(name, temp_rect));
+    textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 60, 60, true)));
+    name = "hb_menu";
+    temp_rect.x += 80;
   }
-  SDL_Surface *hb = IMG_Load("hb_menu.png");
-  if (hb) {
-    hb_pos.w = 60;
-    hb_pos.h = 60;
-    hb_tex = SDL_CreateTextureFromSurface(renderer, hb);
-    SDL_FreeSurface(hb);
-  }
-
   // game info
-  SDL_Surface *game_title_bg = IMG_Load("gamename_bg.png");
-  if (game_title_bg) {
-    game_title_bg_pos.w = 640;
-    game_title_bg_pos.h = 50;
-    game_title_bg_tex = SDL_CreateTextureFromSurface(renderer, game_title_bg);
-    SDL_FreeSurface(game_title_bg);
-  }
-  SDL_Surface *game_info_bg = IMG_Load("company_bg.png");
-  if (game_info_bg) {
-    game_info_bg_pos.w = 640;
-    game_info_bg_pos.h = 50;
-    game_info_bg_tex = SDL_CreateTextureFromSurface(renderer, game_info_bg);
-    SDL_FreeSurface(game_info_bg);
+  name = "gamename_bg";
+  temp_rect = { 0, 254, 0, 0 };
+  for (auto i = 0; i < 2; i++) {
+    rectMap.insert(std::pair<std::string, SDL_Rect>(name, temp_rect));
+    textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 640, 50, true)));
+    name = "company_bg";
+    temp_rect.y += 30;
   }
 
   // game icons
   chdir("romfs:/assets/games/");
-  SDL_Surface *game1 = IMG_Load("genshin-impact.png");
-  if (game1) {
-    gameicon1.w = 320;
-    gameicon1.h = 320;
-    game1_tex = SDL_CreateTextureFromSurface(renderer, game1);
-    SDL_FreeSurface(game1);
-  }
-
-  // other titles
-  SDL_Surface *game2 = IMG_Load("super-mario-oddyssey.png");
-  if (game2) {
-    gameicon2.w = 260;
-    gameicon2.h = 260;
-    game2_tex = SDL_CreateTextureFromSurface(renderer, game2);
-    SDL_FreeSurface(game2);
-  }
-  SDL_Surface *mask = IMG_Load("mask.png");
-  if (mask) {
-    gameicon2.w = 260;
-    gameicon2.h = 260;
-    mask_tex = SDL_CreateTextureFromSurface(renderer, mask);
-    SDL_FreeSurface(mask);
-  }
-  maskedTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 260, 260);
-
-  // Draw masked tex
-  SDL_SetTextureBlendMode(maskedTex, SDL_BLENDMODE_BLEND);
-  SDL_SetTextureBlendMode(game2_tex, SDL_BLENDMODE_MOD);
-  SDL_SetRenderTarget(renderer, maskedTex);
-	SDL_Rect dst = {0, 0, 260, 260};
-
-  SDL_RenderCopy(renderer, mask_tex, NULL, &dst);
-  SDL_RenderCopy(renderer, game2_tex, NULL, &dst);
-  SDL_SetRenderTarget(renderer, NULL);
-
-  SDL_Surface *game3 = IMG_Load("breath-of-the-wild.png");
-  if (game3) {
-    gameicon3.w = 260;
-    gameicon3.h = 260;
-    game3_tex = SDL_CreateTextureFromSurface(renderer, game3);
-    SDL_FreeSurface(game3);
+  name = "genshin-impact";
+  temp_rect = { 470, 340, 0, 0 };
+  w = 320;
+  for (auto i = 0; i < 3; i++) {
+    rectMap.insert(std::pair<std::string, SDL_Rect>(name, temp_rect));
+    textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_masked_texture(name, name + ".png", w)));
+    w = 260;
+    temp_rect.y = 400;
+    if (i == 0) {
+      name = "super-mario-odyssey";
+      temp_rect.x = 830;
+    } else if (i == 1) {
+      name = "breath-of-the-wild";
+      temp_rect.x = 1130;
+    }
   }
 
   // suspended
   chdir("romfs:/assets/UI/");
-  SDL_Surface *suspended_bg = IMG_Load("suspended_bg.png");
-  if (suspended_bg) {
-    suspended_bg_pos.w = 155;
-    suspended_bg_pos.h = 40;
-    suspended_bg_tex = SDL_CreateTextureFromSurface(renderer, suspended_bg);
-    SDL_FreeSurface(suspended_bg);
-  }
-
+  name = "suspended_bg";
+  rectMap.insert(std::pair<std::string, SDL_Rect>(name, { 550, 570, 0, 0 }));
+  textureMap.insert(std::pair<std::string, SDL_Texture*>(name, create_texture(name, name + ".png", 155, 40, true)));
 }
 
 void draw_ui()
 {
+  for (auto i = textureMap.begin(); i != textureMap.end(); i++) {
+    SDL_RenderCopy(renderer, i->second, NULL, &rectMap.find(i->first)->second);
+  }
 
 }
 
@@ -332,11 +233,11 @@ int main(int argc, char* argv[]) {
   //Switch screen size: 720p. Must set to full screen.
   SDL_Window* window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_FULLSCREEN);
   if (!window) SDL_Quit();
-  SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
   if (!renderer) SDL_Quit();
   SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
 
-  init_ui(renderer);
+  init_ui();
 
   chdir("romfs:/assets/UI/");
   TTF_Font* font14 = TTF_OpenFont("font.ttf", 14);
@@ -413,83 +314,8 @@ int main(int argc, char* argv[]) {
 
     SDL_RenderClear(renderer);
 
-    //draw_ui(renderer, 1280, 720);
-    if (wallpaper_tex){
-      SDL_RenderCopy(renderer, wallpaper_tex, NULL, &wallpaper_pos);
-    }
-    SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
 
-    //SDL_SetTextureBlendMode(game1_tex, mask_mode);
-    //if (game1_tex){
-    //SDL_RenderCopy(renderer, game1_tex, NULL, &gameicon1);
-    //}
-    //if (mask_tex){
-    //SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon1);
-    //}
-    SDL_RenderCopy(renderer, maskedTex, NULL, &gameicon2);
-    //SDL_RenderCopy(renderer, mask_tex, NULL, &gameicon2);
-    //if (game2_tex){
-    //SDL_RenderCopy(renderer, game2_tex, NULL, &gameicon2);
-    //}
-    if (game3_tex){
-      SDL_RenderCopy(renderer, game3_tex, NULL, &gameicon3);
-    }
-    if (icons_bg_tex){
-      SDL_RenderCopy(renderer, icons_bg_tex, NULL, &icons_bg_pos);
-    }
-    if (news_tex){
-      SDL_RenderCopy(renderer, news_tex, NULL, &news_pos);
-    }
-    if (e_shop_tex){
-      SDL_RenderCopy(renderer, e_shop_tex, NULL, &e_shop_pos);
-    }
-    if (album_tex){
-      SDL_RenderCopy(renderer, album_tex, NULL, &album_pos);
-    }
-    if (controller_tex){
-      SDL_RenderCopy(renderer, controller_tex, NULL, &controller_pos);
-    }
-    if (settings_tex){
-      SDL_RenderCopy(renderer, settings_tex, NULL, &settings_pos);
-    }
-    if (power_tex){
-      SDL_RenderCopy(renderer, power_tex, NULL, &power_pos);
-    }
-    if (top_menu_bg_tex){
-      SDL_RenderCopy(renderer, top_menu_bg_tex, NULL, &top_menu_bg_pos);
-    }
-    if (controller_mode_tex){
-      SDL_RenderCopy(renderer, controller_mode_tex, NULL, &controller_mode_pos);
-    }
-    if (wifi_tex){
-      SDL_RenderCopy(renderer, wifi_tex, NULL, &wifi_pos);
-    }
-    if (battery_tex){
-      SDL_RenderCopy(renderer, battery_tex, NULL, &battery_pos);
-    }
-    if (avatar_tex){
-      SDL_RenderCopy(renderer, avatar_tex, NULL, &avatar_pos);
-    }
-    if (hb_tex){
-      SDL_RenderCopy(renderer, hb_tex, NULL, &hb_pos);
-    }
-    if (suspended_bg_tex){
-      SDL_RenderCopy(renderer, suspended_bg_tex, NULL, &suspended_bg_pos);
-    }
-    if (game_info_bg_tex){
-      SDL_RenderCopy(renderer, game_info_bg_tex, NULL, &game_info_bg_pos);
-    }
-    if (game_title_bg_tex){
-      SDL_RenderCopy(renderer, game_title_bg_tex, NULL, &game_title_bg_pos);
-    }
-
-    SDL_RenderCopy(renderer, seperator_tex, NULL, &seperator_pos);
-    SDL_RenderCopy(renderer, seperator2_tex, NULL, &seperator2_pos);
-    SDL_RenderCopy(renderer, seperator3_tex, NULL, &seperator3_pos);
-    SDL_RenderCopy(renderer, seperator4_tex, NULL, &seperator4_pos);
-    SDL_RenderCopy(renderer, seperator5_tex, NULL, &seperator5_pos);
-
-
+    draw_ui();
     SDL_RenderCopy(renderer, news_text, NULL, &news_text_pos);
     SDL_RenderCopy(renderer, e_shop_text, NULL, &e_shop_text_pos);
     SDL_RenderCopy(renderer, album_text, NULL, &album_text_pos);
