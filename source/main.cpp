@@ -54,7 +54,7 @@ std::list<std::string> games = {};
 int selected = 0;
 
 std::vector<Title> titles;
-static std::unordered_map<u64, SDL_Texture*> icons;
+std::unordered_map<u64, SDL_Texture*> icons;
 NsApplicationControlData appControlData;
 
 std::string getAppName(uint64_t Tid)
@@ -400,56 +400,34 @@ void draw_details()
 
 void draw_games()
 {
-  /**
-  std::pair<SDL_Texture*, SDL_Rect> p = textureMap.find("genshin-impact")->second;
-  SDL_Texture *t = p.first;
-  SDL_Rect r = p.second;
-  SDL_RenderCopy(renderer, t, NULL, &r);
-  p = textureMap.find("super-mario-odyssey")->second;
-  t = p.first;
-  r = p.second;
-  SDL_RenderCopy(renderer, t, NULL, &r);
-  p = textureMap.find("breath-of-the-wild")->second;
-  t = p.first;
-  r = p.second;
-  SDL_RenderCopy(renderer, t, NULL, &r);
-  **/
-
 
   // draw selected game
-  auto it1 = std::next(games.begin(), selected);
-  std::pair<SDL_Texture*, SDL_Rect> p = textureMap.find(*it1)->second;
-  SDL_Texture *t = p.first;
+  //auto it = std::next(titles.begin(), selected);
+  SDL_Texture *t = icons.find(titles[selected].TitleID)->second;
   SDL_Rect r = { 470, 340, 320, 320 };
   SDL_RenderCopy(renderer, t, NULL, &r);
 
   // loop through all games to the left of it and draw them to correct positions
   SDL_Rect temp_rect = { 470 - 260 - 40, 400, 260, 260 };
   if (selected != 0) {
-    it1--;
-    for (auto i = it1--; i != games.begin(); i--) {
-      p = textureMap.find(*i)->second;
-      t = p.first;
+    for (auto i = selected - 1; i >= 0; i--) {
+      SDL_Texture *t = icons.find(titles[i].TitleID)->second;
       SDL_RenderCopy(renderer, t, NULL, &temp_rect);
       temp_rect.x -= 260 + 20; // icon size plus margin
     }
-    p = textureMap.find(*games.begin())->second;
-    t = p.first;
-    SDL_RenderCopy(renderer, t, NULL, &temp_rect);
   }
 
   // loop through all games to the right of it and draw them to correct positions
+
   temp_rect = { 470 + 320 + 20, 400, 260, 260 };
-  it1 = std::next(games.begin(), selected);
-  if (selected != games.size() - 1) {
-    it1++;
-    for (auto i = it1++; i != games.end(); i++) {
-      p = textureMap.find(*i)->second;
-      t = p.first;
+  if (selected != titles.size() - 1) {
+    for (auto i = selected + 1; i < titles.size(); i++) {
+      SDL_Texture *t = icons.find(titles[i].TitleID)->second;
       SDL_RenderCopy(renderer, t, NULL, &temp_rect);
       temp_rect.x += 260 + 20; // icon size plus margin
     }
   }
+
 
 }
 
@@ -476,21 +454,14 @@ void change_selected()
   //std::cout << *it1 << '\n'; // gives back gesnhin-impact, so it works as expected
 }
 
-static void loadIcon(u64 id, NsApplicationControlData* nsacd, size_t iconsize)
+SDL_Texture* saveIcon(uint8_t* icon)
 {
-    auto it = icons.find(id);
-    if (it == icons.end()) {
-        SDL_Texture* texture;
-        const char* icon = reinterpret_cast<const char*>(nsacd->icon);
-        SDL_Surface *surface = IMG_Load(icon);
-        if (surface) {
-          texture = SDL_CreateTextureFromSurface(renderer, surface);
-          SDL_FreeSurface(surface);
-        }
-        icons.insert({id, texture});
-    }
+  SDL_RWops *temp = SDL_RWFromMem(icon, 0x20000);
+  SDL_Surface *test_s = IMG_LoadJPG_RW(temp);
+  SDL_Texture *test = SDL_CreateTextureFromSurface(renderer, test_s);
+  SDL_FreeSurface(test_s);
+  return test;
 }
-
 
 int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -554,8 +525,9 @@ int main(int argc, char* argv[]) {
 
   SDL_Surface *suspended_text_surface = TTF_RenderText_Blended(font14, "SUSPENDED", White);
   SDL_Texture *suspended_text = SDL_CreateTextureFromSurface(renderer, suspended_text_surface);
-  SDL_Surface *game_title_text_surface = TTF_RenderText_Blended(font30, "Genshin Impact", OffWhite);
-  SDL_Texture *game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
+
+
+
   SDL_Surface *game_info_text_surface = TTF_RenderText_Blended(font, "miHoYo, 1.0.0", DarkGrey);
   SDL_Texture *game_info_text = SDL_CreateTextureFromSurface(renderer, game_info_text_surface);
 
@@ -584,10 +556,6 @@ int main(int argc, char* argv[]) {
   SDL_QueryTexture(suspended_text, NULL, NULL, &w, &h);
   suspended_text_pos.w = w;
   suspended_text_pos.h = h;
-  SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
-  game_title_text_pos.x = 1280 - w - 20;
-  game_title_text_pos.w = w;
-  game_title_text_pos.h = h;
 
   textureMap.find("company_bg")->second.second.x = game_info_text_pos.x - 20;
 
@@ -602,11 +570,18 @@ int main(int argc, char* argv[]) {
   for(Title n : titles)
   {
     std::cout << n.TitleName << '\n';
+    SDL_Texture *t = saveIcon(n.icon);
+    icons.insert(std::make_pair(n.TitleID, t));
   }
-  std::cout << titles.front().TitleID << '\n';
-  loadIcon(titles.front().TitleID, &appControlData, 200);
-  SDL_Texture *test = icons.begin()->second;
-  SDL_Rect test_pos = { 0, 0, 200, 200 };
+  std::cout << titles[3].TitleName << '\n';
+  //loadIcon(titles.front().TitleID, &appControlData, 200);
+
+  SDL_Surface *game_title_text_surface = TTF_RenderText_Blended(font30, titles[selected].TitleName.c_str(), OffWhite);
+  SDL_Texture *game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
+  SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
+  game_title_text_pos.x = 1280 - w - 20;
+  game_title_text_pos.w = w;
+  game_title_text_pos.h = h;
 
 
   while (appletMainLoop()) {
@@ -617,15 +592,11 @@ int main(int argc, char* argv[]) {
     break;
 
     if (keyDown & KEY_LEFT) {
-      if (selected == 0) {
-        selected = 0;
-      } else {
+      if (selected != 0) {
         selected--;
       }
     } else if (keyDown & KEY_RIGHT) {
-      if (selected == games.size() - 1) {
-        selected = games.size() - 1;
-      } else {
+      if (selected != titles.size() - 1) {
         selected++;
       }
     }
@@ -645,7 +616,18 @@ int main(int argc, char* argv[]) {
     time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
     change_selected();
 
-    SDL_RenderCopy(renderer, test, NULL, &test_pos);
+    SDL_FreeSurface(game_title_text_surface);
+
+    SDL_DestroyTexture(game_title_text);
+
+    game_title_text_surface = TTF_RenderText_Blended(font30, titles[selected].TitleName.c_str(), OffWhite);
+    game_title_text = SDL_CreateTextureFromSurface(renderer, game_title_text_surface);
+    SDL_QueryTexture(game_title_text, NULL, NULL, &w, &h);
+    game_title_text_pos.x = 1280 - w - 20;
+    game_title_text_pos.w = w;
+    game_title_text_pos.h = h;
+
+    //SDL_RenderCopy(renderer, test, NULL, &test_pos);
 
 
     SDL_RenderCopy(renderer, news_text, NULL, &news_text_pos);
@@ -687,7 +669,7 @@ int main(int argc, char* argv[]) {
   SDL_DestroyWindow(window);
 
   SDL_Quit();
-	nsExit();
+  nsExit();
   romfsExit();
 
   socketExit();                           // Cleanup
