@@ -115,10 +115,9 @@ SDL_Texture* create_texture(std::string name, std::string filename)
   return temp_tex;
 }
 
-SDL_Texture *create_masked_texture(std::string name, std::string filename, int w)
+SDL_Texture *create_masked_texture(SDL_Texture *game, int w)
 {
-  // other titles
-  SDL_Texture *game = create_texture(name, filename);
+  chdir("romfs:/assets/games/");
   SDL_Texture *mask_tex = create_texture("mask", "mask.png");
 
   SDL_Texture *maskedTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, w);
@@ -131,6 +130,7 @@ SDL_Texture *create_masked_texture(std::string name, std::string filename, int w
   SDL_RenderCopy(renderer, mask_tex, NULL, &dst);
   SDL_RenderCopy(renderer, game, NULL, &dst);
   SDL_SetRenderTarget(renderer, NULL);
+  chdir("romfs:/assets/UI/");
   return maskedTex;
 }
 
@@ -268,25 +268,7 @@ void init_ui()
   textureMap.insert(std::make_pair(name, pair));
 
 
-  // game icons
-  chdir("romfs:/assets/games/");
-  name = "genshin-impact";
-  games.push_back(name);
-  temp_rect = { 470, 340, 320, 320 };
-  pair = std::pair<SDL_Texture*, SDL_Rect>(create_masked_texture(name, name + ".png", 320), temp_rect);
-  textureMap.insert(std::make_pair(name, pair));
-  name = "super-mario-odyssey";
-  games.push_back(name);
-  temp_rect = { 830, 400, 260, 260 };
-  pair = std::pair<SDL_Texture*, SDL_Rect>(create_masked_texture(name, name + ".png", 260), temp_rect);
-  textureMap.insert(std::make_pair(name, pair));
-  name = "breath-of-the-wild";
-  games.push_back(name);
-  temp_rect = { 1130, 400, 260, 260 };
-  pair = std::pair<SDL_Texture*, SDL_Rect>(create_masked_texture(name, name + ".png", 260), temp_rect);
-  textureMap.insert(std::make_pair(name, pair));
-
-  // suspended
+  //suspended
   chdir("romfs:/assets/UI/");
   name = "suspended_bg";
   temp_rect = { 550, 570, 155, 40 };
@@ -459,8 +441,9 @@ SDL_Texture* saveIcon(uint8_t* icon)
   SDL_RWops *temp = SDL_RWFromMem(icon, 0x20000);
   SDL_Surface *test_s = IMG_LoadJPG_RW(temp);
   SDL_Texture *test = SDL_CreateTextureFromSurface(renderer, test_s);
+  SDL_Texture *masked = create_masked_texture(test, 320);
   SDL_FreeSurface(test_s);
-  return test;
+  return masked;
 }
 
 int main(int argc, char* argv[]) {
