@@ -54,6 +54,7 @@ std::list<std::string> games = {};
 int selected = 0;
 
 std::vector<Title> titles;
+static std::unordered_map<u64, SDL_Texture*> icons;
 NsApplicationControlData appControlData;
 
 std::string getAppName(uint64_t Tid)
@@ -475,6 +476,21 @@ void change_selected()
   //std::cout << *it1 << '\n'; // gives back gesnhin-impact, so it works as expected
 }
 
+static void loadIcon(u64 id, NsApplicationControlData* nsacd, size_t iconsize)
+{
+    auto it = icons.find(id);
+    if (it == icons.end()) {
+        SDL_Texture* texture;
+        const char* icon = reinterpret_cast<const char*>(nsacd->icon);
+        SDL_Surface *surface = IMG_Load(icon);
+        if (surface) {
+          texture = SDL_CreateTextureFromSurface(renderer, surface);
+          SDL_FreeSurface(surface);
+        }
+        icons.insert({id, texture});
+    }
+}
+
 
 int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -496,6 +512,8 @@ int main(int argc, char* argv[]) {
 
   socketInitializeDefault();              // Initialize sockets
   nxlinkStdio();                          // Redirect stdout and stderr over the network to nxlink
+
+  Result nsError = nsInitialize();
 
   init_ui();
 
@@ -580,7 +598,16 @@ int main(int argc, char* argv[]) {
   game_info_text_pos.h = h;
 
   //draw_ui();
-  //std::cout << j.at("normal") << '\n';
+  titles = getAllTitles();
+  for(Title n : titles)
+  {
+    std::cout << n.TitleName << '\n';
+  }
+  std::cout << titles.front().TitleID << '\n';
+  loadIcon(titles.front().TitleID, &appControlData, 200);
+  SDL_Texture *test = icons.begin()->second;
+  SDL_Rect test_pos = { 0, 0, 200, 200 };
+
 
   while (appletMainLoop()) {
     hidScanInput();
@@ -605,7 +632,21 @@ int main(int argc, char* argv[]) {
 
 
     draw_ui();
+    SDL_FreeSurface(time_surface);
+
+    SDL_DestroyTexture(time_text);
+
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+
+    strftime (buffer,80,"%H:%M",timeinfo);
+
+    time_surface = TTF_RenderText_Blended(font26, buffer, White);
+    time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
     change_selected();
+
+    SDL_RenderCopy(renderer, test, NULL, &test_pos);
+
 
     SDL_RenderCopy(renderer, news_text, NULL, &news_text_pos);
     SDL_RenderCopy(renderer, e_shop_text, NULL, &e_shop_text_pos);
@@ -646,6 +687,8 @@ int main(int argc, char* argv[]) {
   SDL_DestroyWindow(window);
 
   SDL_Quit();
+	nsExit();
+  romfsExit();
 
   socketExit();                           // Cleanup
 
