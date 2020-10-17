@@ -44,8 +44,8 @@ DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	romfs
 
-APP_TITLE   := SDL2+mixer+image Demo
-APP_AUTHOR  := carstene1ns
+APP_TITLE   := HomeMenuNX
+APP_AUTHOR  := L Lawliet
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -57,7 +57,7 @@ CFLAGS	:=	`sdl2-config --cflags sdl2 SDL2_mixer SDL2_image` -Wall -O2 -ffunction
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS	:= $(CFLAGS)
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
@@ -105,6 +105,7 @@ export HFILES_BIN	:=	$(addsuffix .h,$(subst .,_,$(BINFILES)))
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			-I$(CURDIR)/$(BUILD) \
+
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 

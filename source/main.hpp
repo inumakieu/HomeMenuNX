@@ -9,5 +9,6 @@ struct Title
 {
   uint64_t TitleID;
   std::string TitleName;
+  std::string TitleAuthor;
   NsApplicationIcon icon;
 };
