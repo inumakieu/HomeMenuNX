@@ -118,8 +118,7 @@ std::vector<Title> getAllTitles()
     exit(rc);
   }
 
-  if (actualAppRecordCnt > 10)
-    actualAppRecordCnt = 10;
+  
   for (int32_t i = 0; i < actualAppRecordCnt; i++)
   {
     Title title;
