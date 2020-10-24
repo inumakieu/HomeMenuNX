@@ -8,7 +8,7 @@
 //** Based upon  http://giflib.sourceforge.net/whatsinagif/bits_and_bytes.html **/
 //*******************************************************************************/
 
-
+#pragma once
 #ifndef GIF_DEC_INCLUDED
 #define GIF_DEC_INCLUDED
 
@@ -205,6 +205,8 @@ L_GifFile *L_gifLoadRW(SDL_RWops* file);
 
 /*free all gif structure allocations*/
 void L_gifFileFree(L_GifFile*);
+
+extern char CEV_gifReadWriteErr;
 
 
 #ifdef __cplusplus

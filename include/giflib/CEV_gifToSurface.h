@@ -4,13 +4,12 @@
 //**   CEV    |    05-2016    |   1.0    |  creation/SDL2 **/
 //**********************************************************/
 
-
+#pragma once
 #ifndef GIFTOSURFACE_H_INCLUDED
 #define GIFTOSURFACE_H_INCLUDED
 
-#include <SDL.h>
-#include "CEV_gif.h"
 #include "CEV_gifDeflate.h"
+#include "CEV_gif.h"
 
 //#define METHOD_OVERWRITE 1
 //#define METHOD_REDRAW 2
