@@ -6,17 +6,9 @@ homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 void homescreen::init()
 {
   chdir("romfs:/assets/UI/");
-  animation = CEV_gifAnimLoad("test.gif", renderer);
+  gif = GIF_LoadImage("test.gif");
 
-  if (animation != NULL)
-  {
-    actTexture = CEV_gifTexture(animation);
-    CEV_gifLoopMode(animation, GIF_REPEAT_FOR);
-  }
-  else
-  {
-    std::cout << "file did not load correctly" << '\n';
-  }
+  
 
   std::string name;
   SDL_Rect temp_rect = {0, 0, 1280, 720};
@@ -166,13 +158,16 @@ void homescreen::update_wallpaper()
   **/
 
   // gif wallpaper test
-  if (animation != NULL)
+  Uint16 i;
+  for (i = 0; i < gif->num_frames; ++i)
   {
-    CEV_gifAnimAuto(animation);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, gif->frames[i]->surface);
 
-    //SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, actTexture, NULL, &blitPos);
-    //SDL_RenderPresent(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+
+    SDL_DestroyTexture(texture);
+    SDL_Delay(gif->frames[i]->delay);
   }
 
   //SDL_RenderCopy(renderer, t, NULL, &r);
