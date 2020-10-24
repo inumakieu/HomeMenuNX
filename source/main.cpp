@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <unistd.h>
 
@@ -17,45 +18,45 @@
 #include <SDL_ttf.h>
 #include <SDL2_gfxPrimitives.h>
 #include <switch.h>
+#include <switch/services/applet.h>
 #include <chrono>
 #include <ctime>
 
 using json = nlohmann::json;
 
-SDL_Rect wallpaper_pos = { 0, 0, 0, 0 };
+SDL_Rect wallpaper_pos = {0, 0, 0, 0};
 
-SDL_Rect icons_bg_pos = { 20, 200, 0, 0 };
+SDL_Rect icons_bg_pos = {20, 200, 0, 0};
 
-SDL_Rect name_bg_pos = { 1020, 260, 0, 0 };
-SDL_Rect news_text_pos = { 120, 244, 0, 0 };
-SDL_Rect e_shop_text_pos = { 120, 320, 0, 0 };
-SDL_Rect album_text_pos = { 120, 404, 0, 0 };
-SDL_Rect controller_text_pos = { 120, 475, 0, 0 };
-SDL_Rect settings_text_pos = { 120, 556, 0, 0 };
-SDL_Rect power_text_pos = { 120, 636, 0, 0 };
-SDL_Rect top_menu_bg_pos = { 420, 50, 0, 0 };
-SDL_Rect time_text_pos = { 606, 60, 0, 0 };
-SDL_Rect suspended_bg_pos = { 550, 570, 0, 0 };
-SDL_Rect suspended_text_pos = { 584, 580, 0, 0 };
-SDL_Rect game_title_text_pos = { 0, 260, 0, 0 };
-SDL_Rect game_title_bg_pos = { 0, 254, 0, 0 };
-SDL_Rect game_info_text_pos = { 0, 306, 0, 0 };
-SDL_Rect game_info_bg_pos = { 0, 284, 0, 0 };
-
+SDL_Rect name_bg_pos = {1020, 260, 0, 0};
+SDL_Rect news_text_pos = {120, 244, 0, 0};
+SDL_Rect e_shop_text_pos = {120, 320, 0, 0};
+SDL_Rect album_text_pos = {120, 404, 0, 0};
+SDL_Rect controller_text_pos = {120, 475, 0, 0};
+SDL_Rect settings_text_pos = {120, 556, 0, 0};
+SDL_Rect power_text_pos = {120, 636, 0, 0};
+SDL_Rect top_menu_bg_pos = {420, 50, 0, 0};
+SDL_Rect time_text_pos = {606, 60, 0, 0};
+SDL_Rect suspended_bg_pos = {550, 570, 0, 0};
+SDL_Rect suspended_text_pos = {584, 580, 0, 0};
+SDL_Rect game_title_text_pos = {0, 260, 0, 0};
+SDL_Rect game_title_bg_pos = {0, 254, 0, 0};
+SDL_Rect game_info_text_pos = {0, 306, 0, 0};
+SDL_Rect game_info_bg_pos = {0, 284, 0, 0};
 
 SDL_Color White = {255, 255, 255};
 SDL_Color OffWhite = {230, 230, 230};
 SDL_Color DarkGrey = {11, 11, 11};
 
-SDL_Renderer* renderer;
+SDL_Renderer *renderer;
 
-std::unordered_map<std::string, std::pair<SDL_Texture*, SDL_Rect>> textureMap;
+std::unordered_map<std::string, std::pair<SDL_Texture *, SDL_Rect>> textureMap;
 std::list<std::string> games = {};
 
 int selected = 0;
 
 std::vector<Title> titles;
-std::unordered_map<u64, SDL_Texture*> icons;
+std::unordered_map<u64, SDL_Texture *> icons;
 NsApplicationControlData appControlData;
 
 std::string getAppName(uint64_t Tid)
@@ -63,14 +64,16 @@ std::string getAppName(uint64_t Tid)
   memset(&appControlData, 0x0, sizeof(NsApplicationControlData));
 
   size_t appControlDataSize = 0;
-  if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource::NsApplicationControlSource_Storage, Tid, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize))) {
+  if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource::NsApplicationControlSource_Storage, Tid, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
+  {
     char returnTID[17];
     sprintf(returnTID, "%016" PRIx64, Tid);
     return (std::string)returnTID;
   }
 
   NacpLanguageEntry *languageEntry = nullptr;
-  if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry))) {
+  if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
+  {
     char returnTID[17];
     sprintf(returnTID, "%016" PRIx64, Tid);
     return (std::string)returnTID;
@@ -84,14 +87,16 @@ std::string getAppAuthor(uint64_t Tid)
   memset(&appControlData, 0x0, sizeof(NsApplicationControlData));
 
   size_t appControlDataSize = 0;
-  if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource::NsApplicationControlSource_Storage, Tid, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize))) {
+  if (R_FAILED(nsGetApplicationControlData(NsApplicationControlSource::NsApplicationControlSource_Storage, Tid, &appControlData, sizeof(NsApplicationControlData), &appControlDataSize)))
+  {
     char returnTID[17];
     sprintf(returnTID, "%016" PRIx64, Tid);
     return (std::string)returnTID;
   }
 
   NacpLanguageEntry *languageEntry = nullptr;
-  if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry))) {
+  if (R_FAILED(nacpGetLanguageEntry(&appControlData.nacp, &languageEntry)))
+  {
     char returnTID[17];
     sprintf(returnTID, "%016" PRIx64, Tid);
     return (std::string)returnTID;
@@ -126,19 +131,19 @@ std::vector<Title> getAllTitles()
   return apps;
 }
 
-
-SDL_Texture* create_texture(std::string name, std::string filename)
+SDL_Texture *create_texture(std::string name, std::string filename)
 {
   SDL_Texture *temp_tex = NULL;
   SDL_Surface *surface = IMG_Load(filename.c_str());
-  if (surface) {
+  if (surface)
+  {
     temp_tex = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
   }
   return temp_tex;
 }
 
-SDL_Texture* create_masked_texture(SDL_Texture *game, int w)
+SDL_Texture *create_masked_texture(SDL_Texture *game, int w)
 {
   chdir("romfs:/assets/games/");
   SDL_Texture *mask_tex = create_texture("mask", "mask.png");
@@ -157,8 +162,7 @@ SDL_Texture* create_masked_texture(SDL_Texture *game, int w)
   return maskedTex;
 }
 
-
-SDL_Texture* saveIcon(uint8_t* icon)
+SDL_Texture *saveIcon(uint8_t *icon)
 {
   SDL_RWops *temp = SDL_RWFromMem(icon, 0x20000);
   SDL_Surface *test_s = IMG_LoadJPG_RW(temp);
@@ -169,50 +173,60 @@ SDL_Texture* saveIcon(uint8_t* icon)
 }
 
 // credit to SwitchIdent
-u32 GetBatteryPercent(void) {
-	Result ret = 0;
-	u32 out = 0;
+u32 GetBatteryPercent(void)
+{
+  Result ret = 0;
+  u32 out = 0;
 
-	if (R_FAILED(ret = psmGetBatteryChargePercentage(&out)))
-		return -1;
+  if (R_FAILED(ret = psmGetBatteryChargePercentage(&out)))
+    return -1;
 
-	return out;
+  return out;
 }
 
+AppletApplication appletApplication;
 
-int main(int argc, char* argv[]) {
+Result LaunchApplication(AppletApplication *a, u64 *app_id)
+{
+
+  return 0;
+}
+
+int main(int argc, char *argv[])
+{
   SDL_Init(SDL_INIT_EVERYTHING);
 
   romfsInit();
   psmInitialize();
+  appletInitialize();
   chdir("romfs:/assets/UI/");
 
   TTF_Init();
 
   //Switchpush_back screen size: 720p. Must set to full screen.
-  SDL_Window* window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_FULLSCREEN);
-  if (!window) SDL_Quit();
+  SDL_Window *window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_FULLSCREEN);
+  if (!window)
+    SDL_Quit();
   renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
-  if (!renderer) SDL_Quit();
-  SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+  if (!renderer)
+    SDL_Quit();
+  SDL_Surface *windowSurface = SDL_GetWindowSurface(window);
 
-  socketInitializeDefault();              // Initialize sockets
-  nxlinkStdio();                          // Redirect stdout and stderr over the network to nxlink
+  socketInitializeDefault(); // Initialize sockets
+  nxlinkStdio();             // Redirect stdout and stderr over the network to nxlink
 
   Result nsError = nsInitialize();
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-
   homescreen home(renderer);
   home.init();
 
   chdir("romfs:/assets/UI/");
-  TTF_Font* font14 = TTF_OpenFont("font.ttf", 14);
-  TTF_Font* font = TTF_OpenFont("font.ttf", 18);
-  TTF_Font* font26 = TTF_OpenFont("font.ttf", 26);
-  TTF_Font* font30 = TTF_OpenFont("font.ttf", 30);
-
+  TTF_Font *font14 = TTF_OpenFont("font.ttf", 14);
+  TTF_Font *font = TTF_OpenFont("font.ttf", 18);
+  TTF_Font *font26 = TTF_OpenFont("font.ttf", 26);
+  TTF_Font *font30 = TTF_OpenFont("font.ttf", 30);
 
   SDL_Surface *news_surface = TTF_RenderText_Blended(font, "News", White);
   SDL_Texture *news_text = SDL_CreateTextureFromSurface(renderer, news_surface);
@@ -228,24 +242,21 @@ int main(int argc, char* argv[]) {
   SDL_Texture *power_text = SDL_CreateTextureFromSurface(renderer, power_surface);
 
   std::string battery_s = std::to_string(GetBatteryPercent()) + "%";
-  SDL_Rect battery_pos = { 748, 64, 0, 0 };
+  SDL_Rect battery_pos = {748, 64, 0, 0};
   SDL_Surface *power_pct_surface = TTF_RenderText_Blended(font, battery_s.c_str(), White);
   SDL_Texture *power_pct_text = SDL_CreateTextureFromSurface(renderer, power_pct_surface);
 
-
   time_t rawtime;
-  struct tm * timeinfo;
-  char buffer [80];
+  struct tm *timeinfo;
+  char buffer[80];
 
-  time (&rawtime);
-  timeinfo = localtime (&rawtime);
+  time(&rawtime);
+  timeinfo = localtime(&rawtime);
 
-  strftime (buffer,80,"%H:%M",timeinfo);
+  strftime(buffer, 80, "%H:%M", timeinfo);
 
   SDL_Surface *time_surface = TTF_RenderText_Blended(font26, buffer, White);
   SDL_Texture *time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
-
-
 
   int w, h;
   SDL_QueryTexture(news_text, NULL, NULL, &w, &h);
@@ -273,16 +284,14 @@ int main(int argc, char* argv[]) {
   battery_pos.w = w;
   battery_pos.h = h;
 
-
-
   std::ifstream ifs("homescreen.json");
   json j;
   j << ifs;
-  
+
   std::cout << GetBatteryPercent() << '\n';
 
   titles = getAllTitles();
-  for(Title n : titles)
+  for (Title n : titles)
   {
     SDL_Texture *t = saveIcon(n.icon);
     icons.insert(std::make_pair(n.TitleID, t));
@@ -305,34 +314,51 @@ int main(int argc, char* argv[]) {
 
   home.textureMap.find("company_bg")->second.second.x = home.game_info_text_pos.x - 20;
 
-
-  while (appletMainLoop()) {
+  while (appletMainLoop())
+  {
     hidScanInput();
 
     u32 keyDown = hidKeysDown(CONTROLLER_P1_AUTO);
     if (keyDown & KEY_PLUS)
-    break;
+      break;
 
-    if (keyDown & KEY_LEFT) {
-      if (home.selected != 0) {
+    if (keyDown & KEY_LEFT)
+    {
+      if (home.selected != 0)
+      {
         home.selected--;
       }
-    } else if (keyDown & KEY_RIGHT) {
-      if (home.selected != titles.size() - 1) {
+    }
+    else if (keyDown & KEY_RIGHT)
+    {
+      if (home.selected != titles.size() - 1)
+      {
         home.selected++;
       }
     }
+    else if (keyDown & KEY_A)
+    {
+      // launch game that is selected
+      Result rc = appletCreateApplication(&appletApplication, titles[home.selected].TitleID);
+      std::stringstream ss;
+      ss << 0 << std::hex << std::uppercase << rc;
+      std::cout << ss.str() << '\n';
 
+      /**
+      Result rc = appletRequestLaunchApplication(titles[home.selected].TitleID, NULL);
+      
+      **/
+    }
 
     home.update(titles, icons);
 
     SDL_FreeSurface(time_surface);
     SDL_DestroyTexture(time_text);
 
-    time (&rawtime);
-    timeinfo = localtime (&rawtime);
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
 
-    strftime (buffer,80,"%H:%M",timeinfo);
+    strftime(buffer, 80, "%H:%M", timeinfo);
 
     time_surface = TTF_RenderText_Blended(font26, buffer, White);
     time_text = SDL_CreateTextureFromSurface(renderer, time_surface);
@@ -380,7 +406,6 @@ int main(int argc, char* argv[]) {
     SDL_RenderCopy(renderer, game_title_text, NULL, &home.game_title_text_pos);
     SDL_RenderCopy(renderer, game_info_text, NULL, &home.game_info_text_pos);
 
-
     SDL_RenderPresent(renderer);
 
     SDL_Delay(1);
@@ -412,8 +437,9 @@ int main(int argc, char* argv[]) {
   nsExit();
   romfsExit();
   psmExit();
+  appletExit();
 
-  socketExit();                           // Cleanup
+  socketExit(); // Cleanup
 
   //gfxExit();
   return 0;
