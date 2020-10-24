@@ -4,6 +4,8 @@
 //**   CEV    |    05-2016    |   1.0    |  creation/SDL2 **/
 //**********************************************************/
 
+#pragma once
+
 #ifndef GIFUSER_H_INCLUDED
 #define GIFUSER_H_INCLUDED
 
@@ -44,8 +46,6 @@ enum
 /** \brief gif animation instance
  */
 typedef struct CEV_GifAnim CEV_GifAnim;
-
-char CEV_gifReadWriteErr;
 
 
 /** \brief Loads gif file.

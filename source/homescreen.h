@@ -3,7 +3,6 @@
 #include <SDL_image.h>
 #include <switch.h>
 #include <vector>
-#include <giflib/CEV_gif.h>
 
 #include "base_screen.h"
 #include "main.hpp"

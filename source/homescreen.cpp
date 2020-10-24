@@ -1,4 +1,5 @@
 #include "homescreen.h"
+#include <giflib/CEV_gif.h>
 
 homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 

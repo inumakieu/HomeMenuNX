@@ -11,7 +11,6 @@
 #include <string.h>
 #include <errno.h>
 #include <SDL.h>
-#include "CEV_gif.h"
 #include "CEV_gifDeflate.h"
 #include "CEV_gifToSurface.h"
 
@@ -104,6 +103,8 @@ uint8_t L_gifDicoGetFirstOfString(L_GifDico*, L_GifDicoEntry);//local
 void L_gifDicoStringOutput(L_GifDico*, L_GifDicoEntry, uint8_t*, unsigned int*, unsigned int);//local
 void L_gifDicoOutputRepeat(L_GifDico*, int16_t, uint8_t*, unsigned int*, unsigned int);//local
 void L_gifStreamValueOutput(uint8_t, uint8_t*, unsigned int*, unsigned int);//local
+
+char CEV_gifReadWriteErr;
 
 
 /***Functions Implementation**/
