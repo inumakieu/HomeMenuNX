@@ -212,7 +212,7 @@ void L_gifTextureOverlay(const uint8_t *pixels, const SDL_Rect* blitPos, SDL_Tex
 }
 
 
-char L_gifPtIsInBox(int x, int y, const SDL_Rect *rect)
+int L_gifPtIsInBox(int x, int y, const SDL_Rect *rect)
 {/*is this point in this Rect ?*/
     return ((x >= rect->x)
             && (x < (rect->x + rect->w))
@@ -222,14 +222,14 @@ char L_gifPtIsInBox(int x, int y, const SDL_Rect *rect)
 
 
 
-char L_gifBlit(CEV_GifAnim *anim)
+int L_gifBlit(CEV_GifAnim *anim)
 {/*redraw main texture*/
 
     if(!anim->status.refresh)/*if not refresh only*/
         L_gifPicSelectNxt(anim); /*select next frame*/
 
     int imgAct      = anim->status.imgAct;              /*rw purpose*/
-    char dispMethod = anim->pictures[imgAct].dispMethod;/*rw purpose*/
+    int dispMethod = anim->pictures[imgAct].dispMethod;/*rw purpose*/
 
     switch (dispMethod)
     {/*select disposal method*/
@@ -251,10 +251,10 @@ char L_gifBlit(CEV_GifAnim *anim)
 
 
 
-char L_gifAddModulo(int mode,int* val,int num)
-{/*incrément / décrément de val par modulo***VALIDE***/
+int L_gifAddModulo(int mode,int* val,int num)
+{/*incrï¿½ment / dï¿½crï¿½ment de val par modulo***VALIDE***/
 
-    char result = 0;
+    int result = 0;
 
     switch (mode)
     {
@@ -286,8 +286,8 @@ char L_gifAddModulo(int mode,int* val,int num)
 }
 
 
-char L_gifAddLim(int mode, int *val, int num)
-{/*incrément / décrément de val par limite***VALIDE***/
+int L_gifAddLim(int mode, int *val, int num)
+{/*incrï¿½ment / dï¿½crï¿½ment de val par limite***VALIDE***/
     switch (mode)
     {
         case 0 :/*incremental*/
@@ -301,7 +301,7 @@ char L_gifAddLim(int mode, int *val, int num)
         break;
     }
 
-    return (char)(*val==0 || *val==num-1);/*limit reached*/
+    return (int)(*val==0 || *val==num-1);/*limit reached*/
 }
 
 
@@ -384,7 +384,7 @@ void L_gifFitBoxInto(SDL_Rect *adapt , const SDL_Rect *ref)
 }
 
 
-char L_gifAnimInit(CEV_GifAnim * anim, L_GifFile* gif)
+int L_gifAnimInit(CEV_GifAnim * anim, L_GifFile* gif)
 {/*animation initialization*/
 
     /*filling animation informations from gif file*/

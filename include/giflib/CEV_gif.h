@@ -66,16 +66,16 @@ CEV_GifAnim * CEV_gifAnimLoad(const char* fileName, SDL_Renderer *renderer);
  *
  * \return CEV_GifAnim* on success, NULL on error.
  */
-CEV_GifAnim * CEV_gifAnimLoadRW(SDL_RWops* rwops, SDL_Renderer *renderer, char freeSrc);
+CEV_GifAnim * CEV_gifAnimLoadRW(SDL_RWops* rwops, SDL_Renderer *renderer, int freeSrc);
 
 
 /** \brief gif comment.
  *
  * \param anim : CEV_GifAnim* to extract comment from.
  *
- * \return char* on comment if some, NULL otherwise.
+ * \return int* on comment if some, NULL otherwise.
  */
-char *CEV_gifComment(CEV_GifAnim *anim);
+int *CEV_gifComment(CEV_GifAnim *anim);
 
 
 
@@ -83,18 +83,18 @@ char *CEV_gifComment(CEV_GifAnim *anim);
  *
  * \param anim : CEV_GifAnim* to extract version from.
  *
- * \return char* on version if any, on nul char '\0' otherwise.
+ * \return int* on version if any, on nul int '\0' otherwise.
  */
-char *CEV_gifVersion(CEV_GifAnim *anim);
+int *CEV_gifVersion(CEV_GifAnim *anim);
 
 
 /** \brief gif version
  *
  * \param anim : CEV_GifAnim* to extract version from.
  *
- * \return char* on signature if any, on nul char '\0' otherwise.
+ * \return int* on signature if any, on nul int '\0' otherwise.
  */
-char *CEV_gifSignature(CEV_GifAnim *anim);
+int *CEV_gifSignature(CEV_GifAnim *anim);
 
 
 /** \brief User's texture.
@@ -162,7 +162,7 @@ void CEV_gifLoopReset(CEV_GifAnim *anim);
  *
  * \return 1 at frame change, 0 otherwise.
  */
-char CEV_gifAnimAuto(CEV_GifAnim *anim);
+int CEV_gifAnimAuto(CEV_GifAnim *anim);
 
 
 /** \brief reverses play mode
@@ -189,7 +189,7 @@ void CEV_gifAnimFree(CEV_GifAnim *anim);
  *
  * \return 1 if playing, 0 if animation has ended.
  */
-char CEV_gifLoopStatus(CEV_GifAnim *anim);
+int CEV_gifLoopStatus(CEV_GifAnim *anim);
 
 
 /** \brief queries display method.
@@ -201,7 +201,7 @@ char CEV_gifLoopStatus(CEV_GifAnim *anim);
  *
  * \sa _GIF_METHOD
  */
-char CEV_gifMethod(CEV_GifAnim* anim, unsigned int index);
+int CEV_gifMethod(CEV_GifAnim* anim, unsigned int index);
 
 /**sets method**/
 /** \brief sets display method

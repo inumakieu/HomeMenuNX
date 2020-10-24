@@ -69,8 +69,8 @@ L_GifColorTable;//local
 
 typedef struct
 {/*header Block*/
-    char signature[5];
-    char version[5];
+    int signature[5];
+    int version[5];
 }
 L_GifHeader;//local
 
@@ -160,7 +160,7 @@ typedef struct
     uint8_t     blockSize,
                 subBlockSize;
     uint16_t    repeat;
-    char        *text;
+    int        *text;
 }
 L_GifAppExt;//local unused
 
@@ -168,7 +168,7 @@ L_GifAppExt;//local unused
 typedef struct
 {
     unsigned int numOfBlocks;
-    char         *text;
+    int         *text;
 
 }
 L_GifComExt;//local

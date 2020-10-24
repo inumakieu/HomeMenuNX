@@ -148,6 +148,17 @@ void homescreen::init()
 
 void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_Texture *> icons)
 {
+  update_wallpaper();
+  draw_top_menu();
+  draw_games(titles, icons);
+  draw_icons_menu();
+  draw_seperators();
+  draw_top_left();
+  draw_details();
+}
+
+void homescreen::update_wallpaper()
+{
   /**
   std::pair<SDL_Texture*, SDL_Rect> p = textureMap.find("wallpaper")->second;
   SDL_Texture *t = p.first;
@@ -165,12 +176,6 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
   }
 
   //SDL_RenderCopy(renderer, t, NULL, &r);
-  draw_top_menu();
-  draw_games(titles, icons);
-  draw_icons_menu();
-  draw_seperators();
-  draw_top_left();
-  draw_details();
 }
 
 void homescreen::draw_top_menu()
@@ -292,11 +297,31 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
   SDL_Rect temp_rect = {470 - 260 - 40, 400, 260, 260};
   if (selected != 0)
   {
+    /**
     for (auto i = selected - 1; i >= 0; i--)
     {
       SDL_Texture *t = icons.find(titles[i].TitleID)->second;
       SDL_RenderCopy(renderer, t, NULL, &temp_rect);
       temp_rect.x -= 260 + 20; // icon size plus margin
+    }
+    **/
+    if (selected > 3)
+    {
+      for (auto i = 3; i >= 0; i--)
+      {
+        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_RenderCopy(renderer, t, NULL, &temp_rect);
+        temp_rect.x -= 260 + 20; // icon size plus margin
+      }
+    }
+    else
+    {
+      for (auto i = selected - 1; i >= 0; i--)
+      {
+        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_RenderCopy(renderer, t, NULL, &temp_rect);
+        temp_rect.x -= 260 + 20; // icon size plus margin
+      }
     }
   }
 
@@ -305,11 +330,31 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
   temp_rect = {470 + 320 + 40, 400, 260, 260};
   if (selected != titles.size() - 1)
   {
+    /**
     for (auto i = selected + 1; i < titles.size(); i++)
     {
       SDL_Texture *t = icons.find(titles[i].TitleID)->second;
       SDL_RenderCopy(renderer, t, NULL, &temp_rect);
       temp_rect.x += 260 + 20; // icon size plus margin
+    }
+    **/
+    if ((titles.size() - 1) - selected > 3)
+    {
+      for (auto i = 0; i >= 3; i++)
+      {
+        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_RenderCopy(renderer, t, NULL, &temp_rect);
+        temp_rect.x += 260 + 20; // icon size plus margin
+      }
+    }
+    else
+    {
+      for (auto i = selected + 1; i < titles.size(); i++)
+      {
+        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_RenderCopy(renderer, t, NULL, &temp_rect);
+        temp_rect.x += 260 + 20; // icon size plus margin
+      }
     }
   }
 }

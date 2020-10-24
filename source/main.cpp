@@ -105,6 +105,7 @@ std::string getAppAuthor(uint64_t Tid)
   return std::string(languageEntry->author);
 }
 
+/**
 std::vector<Title> getAllTitles()
 {
   std::vector<Title> apps;
@@ -118,7 +119,9 @@ std::vector<Title> getAllTitles()
     exit(rc);
   }
 
-  
+  if (actualAppRecordCnt > 10)
+    actualAppRecordCnt = 10;
+
   for (int32_t i = 0; i < actualAppRecordCnt; i++)
   {
     Title title;
@@ -129,6 +132,35 @@ std::vector<Title> getAllTitles()
     apps.push_back(title);
   }
   delete[] appRecords;
+  return apps;
+}
+**/
+
+std::vector<Title> getAllTitles(int32_t count)
+{
+  std::vector<Title> apps;
+  NsApplicationRecord appRecords = {};
+  int32_t actualAppRecordCnt = 0;
+  Result rc;
+
+  while (1)
+  {
+    static int32_t offset = 0;
+    rc = nsListApplicationRecord(&appRecords, 1, offset, &actualAppRecordCnt);
+    if (R_FAILED(rc) || (actualAppRecordCnt < 1) || (offset >= count))
+      break;
+    if (appRecords.application_id != 0)
+    {
+      Title title;
+      title.TitleID = appRecords.application_id;
+      title.TitleName = getAppName(appRecords.application_id);
+      title.TitleAuthor = getAppAuthor(appRecords.application_id);
+      memcpy(&title.icon, appControlData.icon, sizeof(title.icon));
+      apps.push_back(title);
+    }
+    offset++;
+    appRecords = {};
+  }
   return apps;
 }
 
@@ -199,7 +231,7 @@ int main(int argc, char *argv[])
 
   romfsInit();
   psmInitialize();
-  appletInitialize();
+  //appletInitialize();
   chdir("romfs:/assets/UI/");
 
   TTF_Init();
@@ -291,7 +323,7 @@ int main(int argc, char *argv[])
 
   std::cout << GetBatteryPercent() << '\n';
 
-  titles = getAllTitles();
+  titles = getAllTitles(5);
   for (Title n : titles)
   {
     SDL_Texture *t = saveIcon(n.icon);
@@ -438,7 +470,7 @@ int main(int argc, char *argv[])
   nsExit();
   romfsExit();
   psmExit();
-  appletExit();
+  //appletExit();
 
   socketExit(); // Cleanup
 

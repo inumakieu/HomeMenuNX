@@ -38,7 +38,7 @@ CEV_GifAnim * CEV_gifAnimLoad(const char* fileName, SDL_Renderer *renderer)
 
 
 
-CEV_GifAnim * CEV_gifAnimLoadRW(SDL_RWops* rwops, SDL_Renderer *renderer, char freeSrc)
+CEV_GifAnim * CEV_gifAnimLoadRW(SDL_RWops* rwops, SDL_Renderer *renderer, int freeSrc)
 {/*gif animation load from SDL_RWops */
 
         /*DEC**/
@@ -171,7 +171,7 @@ err_exit :
 
 
 
-char *CEV_gifComment(CEV_GifAnim *anim)
+int *CEV_gifComment(CEV_GifAnim *anim)
 {/*returns embedded comment*/
 
     return anim->status.comment;
@@ -179,7 +179,7 @@ char *CEV_gifComment(CEV_GifAnim *anim)
 
 
 
-char *CEV_gifVersion(CEV_GifAnim *anim)
+int *CEV_gifVersion(CEV_GifAnim *anim)
 {/*returns embedded version*/
 
     return anim->status.version;
@@ -187,7 +187,7 @@ char *CEV_gifVersion(CEV_GifAnim *anim)
 
 
 
-char *CEV_gifSignature(CEV_GifAnim *anim)
+int *CEV_gifSignature(CEV_GifAnim *anim)
 {/*returns embedded signature*/
 
     return anim->status.signature;
@@ -291,10 +291,10 @@ void CEV_gifLoopReset(CEV_GifAnim *anim)
 
 
 
-char CEV_gifAnimAuto(CEV_GifAnim *anim)
+int CEV_gifAnimAuto(CEV_GifAnim *anim)
 {/*updates animations**/
 
-    char sts = 0;
+    int sts = 0;
 
     unsigned int actTime,
                  now = SDL_GetTicks();
@@ -373,7 +373,7 @@ void CEV_gifAnimFree(CEV_GifAnim *anim)
 
 
 
-char CEV_gifLoopStatus(CEV_GifAnim* anim)
+int CEV_gifLoopStatus(CEV_GifAnim* anim)
 {/*returns if loop is playing or not**/
 
     return !(anim->status.loopDone || (anim->status.loopMode==GIF_STOP));
@@ -381,13 +381,13 @@ char CEV_gifLoopStatus(CEV_GifAnim* anim)
 
 
 
-char CEV_gifMethod(CEV_GifAnim* anim, unsigned int index)
+int CEV_gifMethod(CEV_GifAnim* anim, unsigned int index)
 {/*returns used method**/
 
     if(index>anim->status.imgNum-1)
         index = 0;
 
-    return (char)anim->pictures[index].dispMethod;
+    return (int)anim->pictures[index].dispMethod;
 }
 
 

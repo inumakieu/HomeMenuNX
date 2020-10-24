@@ -114,7 +114,7 @@ L_GifFile *L_gifLoadRW(SDL_RWops* file)
 
     L_GifFile *gif = NULL;
 
-    unsigned char
+    unsigned int
                 endOfFile=0;
 
 
@@ -355,7 +355,7 @@ void L_gifDataFillRW(L_GifFile *gif, SDL_RWops* file)
             *rawData    = NULL, /*data field only*/
             *temp       = NULL; /*temporary*/
 
-    unsigned char
+    unsigned int
                 LZWminiCodeSize = 0, /*min code size*/
                 subBlockSize    = 0; /*size of data sub block*/
 
@@ -419,7 +419,7 @@ int L_gifComExtFillRW(L_GifComExt *ext, SDL_RWops* file)
     temp = SDL_ReadU8(file);
     temp+=1;
 
-    ext->text = malloc(temp * sizeof(char));
+    ext->text = malloc(temp * sizeof(int));
     if(ext->text == NULL)
     {
         fprintf(stderr, "err / L_gifComExtFillRW : %s\n", strerror(errno));

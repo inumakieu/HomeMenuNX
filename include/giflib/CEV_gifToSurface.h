@@ -56,7 +56,7 @@ L_GifSurfaceMain;
  */
 typedef struct L_GifInfo
 {
-    char *comment,
+    int *comment,
          signature[4],
          version[4],
          loopDone,
@@ -93,19 +93,19 @@ void L_gifTextureRedraw(const uint8_t*, const SDL_Rect* , SDL_Texture*);
 
 void L_gifTextureOverlay(const uint8_t*, const SDL_Rect* , SDL_Texture*);
 
-char L_gifPtIsInBox(int , int , const SDL_Rect*);
+int L_gifPtIsInBox(int , int , const SDL_Rect*);
 
-char L_gifBlit(CEV_GifAnim *anim);
+int L_gifBlit(CEV_GifAnim *anim);
 
 void L_gifPicSelectNxt(CEV_GifAnim *anim);
 
-char L_gifAddModulo(int mode,int* val,int num);
+int L_gifAddModulo(int mode,int* val,int num);
 
-char L_gifAddLim(int mode, int *val, int num);
+int L_gifAddLim(int mode, int *val, int num);
 
 void L_gifFitBoxInto(SDL_Rect*, const SDL_Rect*);
 
-char L_gifAnimInit(CEV_GifAnim*, L_GifFile*);
+int L_gifAnimInit(CEV_GifAnim*, L_GifFile*);
 
 #ifdef __cplusplus
 }

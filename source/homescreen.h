@@ -29,6 +29,9 @@ public:
   void update(std::vector<Title> titles, std::unordered_map<u64, SDL_Texture *> icons);
 
 private:
+
+  void update_wallpaper();
+  
   void draw_top_menu();
 
   void draw_icons_menu();
