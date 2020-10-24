@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
 
   std::cout << GetBatteryPercent() << '\n';
 
-  titles = getAllTitles(5);
+  titles = getAllTitles(10);
   for (Title n : titles)
   {
     SDL_Texture *t = saveIcon(n.icon);

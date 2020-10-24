@@ -307,9 +307,9 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
     **/
     if (selected > 3)
     {
-      for (auto i = 3; i >= 0; i--)
+      for (auto i = 1; i <= 4; i++)
       {
-        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_Texture *t = icons.find(titles[selected - i].TitleID)->second;
         SDL_RenderCopy(renderer, t, NULL, &temp_rect);
         temp_rect.x -= 260 + 20; // icon size plus margin
       }
@@ -340,9 +340,9 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
     **/
     if ((titles.size() - 1) - selected > 3)
     {
-      for (auto i = 0; i >= 3; i++)
+      for (auto i = 1; i <= 4; i++)
       {
-        SDL_Texture *t = icons.find(titles[i].TitleID)->second;
+        SDL_Texture *t = icons.find(titles[selected + i].TitleID)->second;
         SDL_RenderCopy(renderer, t, NULL, &temp_rect);
         temp_rect.x += 260 + 20; // icon size plus margin
       }
