@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include <switch.h>
 #include <vector>
+#include <giflib/CEV_gif.h>
 
 #include "base_screen.h"
 #include "main.hpp"
@@ -16,10 +17,12 @@ public:
   SDL_Rect game_info_text_pos = {0, 306, 0, 0};
   int selected = 0;
 
+  CEV_GifAnim *animation;
+  SDL_Texture *actTexture = NULL;
+
+  SDL_Rect blitPos = {0, 0, 1280, 720};
+
   homescreen(SDL_Renderer *r);
-
-  
-
 
   void init();
 

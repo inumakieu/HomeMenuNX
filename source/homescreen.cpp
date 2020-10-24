@@ -1,20 +1,22 @@
 #include "homescreen.h"
-#include <giflib/CEV_gif.h>
+#include <iostream>
 
 homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 
-CEV_GifAnim *animation;
-SDL_Texture *actTexture = NULL;
-
-SDL_Rect blitPos = { 0, 0, 1280, 720 };
-
 void homescreen::init()
 {
-
+  chdir("romfs:/assets/UI/");
   animation = CEV_gifAnimLoad("test.gif", renderer);
 
-  actTexture = CEV_gifTexture(animation);
-  CEV_gifLoopMode(animation, GIF_REPEAT_FOR);
+  if (animation != NULL)
+  {
+    actTexture = CEV_gifTexture(animation);
+    CEV_gifLoopMode(animation, GIF_REPEAT_FOR);
+  }
+  else
+  {
+    std::cout << "file did not load correctly" << '\n';
+  }
 
   std::string name;
   SDL_Rect temp_rect = {0, 0, 1280, 720};
@@ -153,11 +155,13 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
   **/
 
   // gif wallpaper test
-
-  CEV_gifAnimAuto(animation);
-  SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, actTexture, NULL, &blitPos);
-  SDL_RenderPresent(renderer);
+  if (animation != NULL)
+  {
+    CEV_gifAnimAuto(animation);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, actTexture, NULL, &blitPos);
+    SDL_RenderPresent(renderer);
+  }
 
   //SDL_RenderCopy(renderer, t, NULL, &r);
   draw_top_menu();

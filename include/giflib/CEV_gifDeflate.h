@@ -206,7 +206,7 @@ L_GifFile *L_gifLoadRW(SDL_RWops* file);
 /*free all gif structure allocations*/
 void L_gifFileFree(L_GifFile*);
 
-extern char CEV_gifReadWriteErr;
+extern int CEV_gifReadWriteErr;
 
 
 #ifdef __cplusplus

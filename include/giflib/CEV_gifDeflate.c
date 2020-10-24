@@ -104,7 +104,7 @@ void L_gifDicoStringOutput(L_GifDico*, L_GifDicoEntry, uint8_t*, unsigned int*, 
 void L_gifDicoOutputRepeat(L_GifDico*, int16_t, uint8_t*, unsigned int*, unsigned int);//local
 void L_gifStreamValueOutput(uint8_t, uint8_t*, unsigned int*, unsigned int);//local
 
-char CEV_gifReadWriteErr;
+int CEV_gifReadWriteErr = 0;
 
 
 /***Functions Implementation**/
@@ -117,7 +117,6 @@ L_GifFile *L_gifLoadRW(SDL_RWops* file)
     unsigned char
                 endOfFile=0;
 
-    CEV_gifReadWriteErr = 0;
 
     /*creating new gif structure*/
     gif = L_gifCreate();
@@ -174,7 +173,7 @@ int L_gifExtFillRW(L_GifFile *gif, SDL_RWops* file)
     {/*switch file extension type*/
 
         case 0xf9 : /*Graphics Control Extension*/
-            L_gifGceFillRW(&gif->gce, file);/*vérifié*/
+            L_gifGceFillRW(&gif->gce, file);/*vï¿½rifiï¿½*/
         break;
 
         /* TODO (cedric#1#): eventually to be taken into consideration but why ? */
@@ -431,7 +430,7 @@ int L_gifComExtFillRW(L_GifComExt *ext, SDL_RWops* file)
 
         CEV_gifReadWriteErr++;
 
-    /*debug supprimé ici*/
+    /*debug supprimï¿½ ici*/
     /*ext->text[temp-1]='\0';*/
 
     if(CEV_gifReadWriteErr)
