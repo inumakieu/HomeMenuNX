@@ -158,9 +158,10 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
   if (animation != NULL)
   {
     CEV_gifAnimAuto(animation);
-    SDL_RenderClear(renderer);
+
+    //SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, actTexture, NULL, &blitPos);
-    SDL_RenderPresent(renderer);
+    //SDL_RenderPresent(renderer);
   }
 
   //SDL_RenderCopy(renderer, t, NULL, &r);
