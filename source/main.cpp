@@ -135,8 +135,6 @@ std::vector<Title> getAllTitles()
   return apps;
 }
 
-
-
 SDL_Texture *create_texture(std::string name, std::string filename)
 {
   SDL_Texture *temp_tex = NULL;
@@ -344,16 +342,6 @@ int main(int argc, char *argv[])
     }
     else if (keyDown & KEY_A)
     {
-      // launch game that is selected
-      Result rc = appletCreateApplication(&appletApplication, titles[home.selected].TitleID);
-      std::stringstream ss;
-      ss << 0 << std::hex << std::uppercase << rc;
-      std::cout << ss.str() << '\n';
-
-      /**
-      Result rc = appletRequestLaunchApplication(titles[home.selected].TitleID, NULL);
-      
-      **/
     }
 
     home.update(titles, icons);

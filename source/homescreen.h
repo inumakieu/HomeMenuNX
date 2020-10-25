@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <switch.h>
 #include <vector>
-#include <gifwrap/SDL_gifwrap.h>
+#include <gifdec/gifdec.h>
 
 #include "base_screen.h"
 #include "main.hpp"
@@ -17,8 +17,14 @@ public:
   SDL_Rect game_info_text_pos = {0, 306, 0, 0};
   int selected = 0;
 
-  GIF_Image *gif;
-  
+  SDL_Surface *gif_surface;
+  SDL_Texture *gif_texture;
+  gd_GIF *gif;
+  Uint8 *color, *frame;
+  Uint32 pixel;
+  Uint32 t0, t1, delay, delta;
+  int ret;
+  void *addr;
 
   homescreen(SDL_Renderer *r);
 
@@ -26,9 +32,9 @@ public:
 
   void update(std::vector<Title> titles, std::unordered_map<u64, SDL_Texture *> icons);
 
+  void update_wallpaper();
 private:
 
-  void update_wallpaper();
 
   void draw_top_menu();
 
