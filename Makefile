@@ -39,7 +39,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source include/giflib
+SOURCES := source include/gifwrap
 DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	romfs

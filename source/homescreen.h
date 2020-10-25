@@ -11,13 +11,14 @@
 class homescreen : public base_screen
 {
 public:
-  SDL_Rect wallpaper_pos = {0, 0, 0, 0};
+  SDL_Rect wallpaper_pos = {0, 0, 1280, 720};
   SDL_Rect icons_bg_pos = {20, 200, 0, 0};
   SDL_Rect game_title_text_pos = {0, 260, 0, 0};
   SDL_Rect game_info_text_pos = {0, 306, 0, 0};
   int selected = 0;
 
   GIF_Image *gif;
+  
 
   homescreen(SDL_Renderer *r);
 

@@ -5,11 +5,6 @@ homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 
 void homescreen::init()
 {
-  chdir("romfs:/assets/UI/");
-  gif = GIF_LoadImage("test.gif");
-
-  
-
   std::string name;
   SDL_Rect temp_rect = {0, 0, 1280, 720};
   int w, h = 0;
@@ -151,26 +146,26 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
 
 void homescreen::update_wallpaper()
 {
-  /**
+  
   std::pair<SDL_Texture*, SDL_Rect> p = textureMap.find("wallpaper")->second;
   SDL_Texture *t = p.first;
   SDL_Rect r = p.second;
-  **/
+  SDL_RenderCopy(renderer, t, NULL, &r);
 
   // gif wallpaper test
+  /**
   Uint16 i;
   for (i = 0; i < gif->num_frames; ++i)
   {
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, gif->frames[i]->surface);
 
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderCopy(renderer, texture, NULL, &wallpaper_pos);
     SDL_RenderPresent(renderer);
 
     SDL_DestroyTexture(texture);
     SDL_Delay(gif->frames[i]->delay);
-  }
+  }**/
 
-  //SDL_RenderCopy(renderer, t, NULL, &r);
 }
 
 void homescreen::draw_top_menu()
@@ -289,17 +284,10 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
   SDL_RenderCopy(renderer, selected_tex, NULL, &selected_rect);
 
   // loop through all games to the left of it and draw them to correct positions
+  
   SDL_Rect temp_rect = {470 - 260 - 40, 400, 260, 260};
   if (selected != 0)
   {
-    /**
-    for (auto i = selected - 1; i >= 0; i--)
-    {
-      SDL_Texture *t = icons.find(titles[i].TitleID)->second;
-      SDL_RenderCopy(renderer, t, NULL, &temp_rect);
-      temp_rect.x -= 260 + 20; // icon size plus margin
-    }
-    **/
     if (selected > 3)
     {
       for (auto i = 1; i <= 4; i++)
@@ -325,14 +313,6 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
   temp_rect = {470 + 320 + 40, 400, 260, 260};
   if (selected != titles.size() - 1)
   {
-    /**
-    for (auto i = selected + 1; i < titles.size(); i++)
-    {
-      SDL_Texture *t = icons.find(titles[i].TitleID)->second;
-      SDL_RenderCopy(renderer, t, NULL, &temp_rect);
-      temp_rect.x += 260 + 20; // icon size plus margin
-    }
-    **/
     if ((titles.size() - 1) - selected > 3)
     {
       for (auto i = 1; i <= 4; i++)
