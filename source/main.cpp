@@ -307,8 +307,11 @@ int main(int argc, char *argv[])
 
   romfsInit();
   psmInitialize();
-  appletInitialize();
-  
+  //appletInitialize();
+  AccountServiceType service_type;
+  accountInitialize(service_type);
+
+
   chdir("romfs:/assets/UI/");
 
   TTF_Init();
