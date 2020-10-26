@@ -270,30 +270,53 @@ Result ApplicationSetForeground()
 
 Result LaunchApplication(u64 app_id, bool system, AccountUid user_id, void *data, size_t size)
 {
+  std::cout << "AppletType: " << appletGetAppletType() << '\n';
+  std::stringstream ss;
   appletApplicationClose(&appletApplication);
+
   if (system)
   {
-    R_TRY(appletCreateSystemApplication(&appletApplication, app_id));
+    ss << 0 << std::hex << std::uppercase << appletCreateSystemApplication(&appletApplication, app_id);
+
+    std::cout << ss.str() << '\n';
+    ss.clear();
   }
   else
   {
-    R_TRY(appletCreateApplication(&appletApplication, app_id));
+    ss << 0 << std::hex << std::uppercase << appletCreateApplication(&appletApplication, app_id);
+
+    std::cout << ss.str() << '\n';
+    ss.clear();
   }
 
   if (accountUidIsValid(&user_id))
   {
     auto selected_user_arg = ApplicationSelectedUserArgument::Create(user_id);
-    R_TRY(ApplicationSend(&selected_user_arg, sizeof(selected_user_arg), AppletLaunchParameterKind_PreselectedUser));
+    ss << 0 << std::hex << std::uppercase << ApplicationSend(&selected_user_arg, sizeof(selected_user_arg), AppletLaunchParameterKind_PreselectedUser);
+
+    std::cout << ss.str() << '\n';
+    ss.clear();
   }
 
   if (size > 0)
   {
-    R_TRY(ApplicationSend(data, size));
-  }
+    ss << 0 << std::hex << std::uppercase << ApplicationSend(data, size);
 
-  R_TRY(appletUnlockForeground());
-  R_TRY(appletApplicationStart(&appletApplication));
-  R_TRY(ApplicationSetForeground());
+    std::cout << ss.str() << '\n';
+    ss.clear();
+  }
+  ss << 0 << std::hex << std::uppercase << appletUnlockForeground();
+  std::cout << ss.str() << '\n';
+  ss.clear();
+
+  ss << 0 << std::hex << std::uppercase << appletApplicationStart(&appletApplication);
+  std::cout << ss.str() << '\n';
+  ss.clear();
+
+  ss << 0 << std::hex << std::uppercase << ApplicationSetForeground();
+
+  std::cout << ss.str() << '\n';
+  ss.clear();
 
   //g_LastApplicationId = app_id;
   return 0;
@@ -307,10 +330,7 @@ int main(int argc, char *argv[])
 
   romfsInit();
   psmInitialize();
-  //appletInitialize();
-  AccountServiceType service_type;
-  accountInitialize(service_type);
-
+  accountInitialize(AccountServiceType_System);
 
   chdir("romfs:/assets/UI/");
 
@@ -564,7 +584,6 @@ int main(int argc, char *argv[])
   nsExit();
   romfsExit();
   psmExit();
-  appletExit();
 
   socketExit(); // Cleanup
 
