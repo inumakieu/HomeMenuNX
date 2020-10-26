@@ -5,12 +5,15 @@ homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 
 void homescreen::init()
 {
-
   std::string name;
   SDL_Rect temp_rect = {0, 0, 1280, 720};
   int w, h = 0;
 
   // wallpaper
+
+  SDL_Surface *bg_temp_surf = IMG_Load("bg.jpg");
+  bg = SDL_CreateTextureFromSurface(renderer, bg_temp_surf);
+
   auto pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("wallpaper", "wallpaper.png"), temp_rect);
   textureMap.insert(std::make_pair("wallpaper", pair));
 
@@ -147,13 +150,22 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
 
 void homescreen::update_wallpaper()
 {
-
+  /**
   std::pair<SDL_Texture *, SDL_Rect> p = textureMap.find("wallpaper")->second;
   SDL_Texture *t = p.first;
   SDL_Rect r = p.second;
   SDL_RenderCopy(renderer, t, NULL, &r);
+  **/
 
   // gif wallpaper test
+
+  ticks = SDL_GetTicks();
+  seconds = ticks / 100;
+  sprite = seconds % 42;
+  x = (sprite % columns) * 1280;
+  y = (sprite / columns) * 720;
+  srcrect = { x, y, 1280, 720 };
+  SDL_RenderCopy(renderer, bg, &srcrect, &wallpaper_pos);
 }
 
 void homescreen::draw_top_menu()

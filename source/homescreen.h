@@ -16,6 +16,14 @@ public:
   SDL_Rect game_title_text_pos = {0, 260, 0, 0};
   SDL_Rect game_info_text_pos = {0, 306, 0, 0};
   int selected = 0;
+  SDL_Texture *bg = NULL;
+  SDL_Rect srcrect = {0, 0, 1280, 720};
+  SDL_Rect dstrect = {0, 0, 1280, 720};
+  Uint32 ticks = 0;
+  Uint32 seconds = 0;
+  Uint32 sprite = 0;
+  int columns = 5;
+  Uint32 x, y;
 
   homescreen(SDL_Renderer *r);
 
@@ -24,9 +32,8 @@ public:
   void update(std::vector<Title> titles, std::unordered_map<u64, SDL_Texture *> icons);
 
   void update_wallpaper();
+
 private:
-
-
   void draw_top_menu();
 
   void draw_icons_menu();
