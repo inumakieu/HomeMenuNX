@@ -234,6 +234,7 @@ int main(int argc, char *argv[])
 
   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
   Mix_Music *audio = Mix_LoadMUS("bgm.mp3");
+  Mix_Chunk *launch = Mix_LoadWAV("launch.mp3");
   Mix_PlayMusic(audio, -1); //Play the audio file
 
   TTF_Font *font14 = TTF_OpenFont("font.ttf", 14);
@@ -351,6 +352,7 @@ int main(int argc, char *argv[])
     }
     else if (keyDown & KEY_A)
     {
+      Mix_PlayChannel(-1, launch, 0); //Play the audio file
     }
 
     home.update(titles, icons);
