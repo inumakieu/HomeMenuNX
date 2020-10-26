@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <functional>
 
 #include <unistd.h>
 
@@ -188,11 +189,113 @@ u32 GetBatteryPercent(void)
   return out;
 }
 
-AppletApplication appletApplication;
+#ifndef R_TRY
 
-Result LaunchApplication(AppletApplication *a, u64 *app_id)
+#define R_TRY(res_expr) ({                                  \
+  const auto _tmp_r_try_rc = static_cast<Result>(res_expr); \
+  if (R_FAILED(_tmp_r_try_rc))                              \
+  {                                                         \
+    return _tmp_r_try_rc;                                   \
+  }                                                         \
+})
+
+#endif
+
+class OnScopeExit
 {
 
+public:
+  using Fn = std::function<void()>;
+
+private:
+  Fn exit_fn;
+
+public:
+  OnScopeExit(Fn fn) : exit_fn(fn) {}
+
+  ~OnScopeExit()
+  {
+    (this->exit_fn)();
+  }
+};
+
+#define UL_CONCAT_IMPL(x, y) x##y
+#define UL_CONCAT(x, y) UL_CONCAT_IMPL(x, y)
+#define UL_UNIQUE_VAR_NAME(prefix) UL_CONCAT(prefix##_, __COUNTER__)
+
+#define UL_ON_SCOPE_EXIT(...) OnScopeExit UL_UNIQUE_VAR_NAME(on_scope_exit)([&]() { __VA_ARGS__ })
+
+struct ApplicationSelectedUserArgument
+{
+
+  static constexpr u32 SelectedUserMagic = 0xC79497CA;
+
+  u32 magic;
+  u8 unk_1;
+  u8 pad[3];
+  AccountUid uid;
+  u8 unk2[0x3E8];
+
+  static inline constexpr ApplicationSelectedUserArgument Create(AccountUid uid)
+  {
+    ApplicationSelectedUserArgument arg = {};
+    arg.magic = SelectedUserMagic;
+    arg.unk_1 = 1;
+    arg.uid = uid;
+    return arg;
+  }
+};
+static_assert(sizeof(ApplicationSelectedUserArgument) == 0x400, "ApplicationSelectedUserArgument");
+
+AppletApplication appletApplication;
+bool g_DaemonHasFocus;
+Result ResultSuccess;
+
+Result ApplicationSend(void *data, size_t size, AppletLaunchParameterKind kind = AppletLaunchParameterKind_UserChannel)
+{
+  AppletStorage st;
+  R_TRY(appletCreateStorage(&st, size));
+  UL_ON_SCOPE_EXIT({ appletStorageClose(&st); });
+  R_TRY(appletStorageWrite(&st, 0, data, size));
+  R_TRY(appletApplicationPushLaunchParameter(&appletApplication, kind, &st));
+  return ResultSuccess;
+}
+
+Result ApplicationSetForeground()
+{
+  R_TRY(appletApplicationRequestForApplicationToGetForeground(&appletApplication));
+  g_DaemonHasFocus = false;
+  return ResultSuccess;
+}
+
+Result LaunchApplication(u64 app_id, bool system, AccountUid user_id, void *data, size_t size)
+{
+  appletApplicationClose(&appletApplication);
+  if (system)
+  {
+    R_TRY(appletCreateSystemApplication(&appletApplication, app_id));
+  }
+  else
+  {
+    R_TRY(appletCreateApplication(&appletApplication, app_id));
+  }
+
+  if (accountUidIsValid(&user_id))
+  {
+    auto selected_user_arg = ApplicationSelectedUserArgument::Create(user_id);
+    R_TRY(ApplicationSend(&selected_user_arg, sizeof(selected_user_arg), AppletLaunchParameterKind_PreselectedUser));
+  }
+
+  if (size > 0)
+  {
+    R_TRY(ApplicationSend(data, size));
+  }
+
+  R_TRY(appletUnlockForeground());
+  R_TRY(appletApplicationStart(&appletApplication));
+  R_TRY(ApplicationSetForeground());
+
+  //g_LastApplicationId = app_id;
   return 0;
 }
 
@@ -204,7 +307,8 @@ int main(int argc, char *argv[])
 
   romfsInit();
   psmInitialize();
-  //appletInitialize();
+  appletInitialize();
+  
   chdir("romfs:/assets/UI/");
 
   TTF_Init();
@@ -224,6 +328,9 @@ int main(int argc, char *argv[])
   Result nsError = nsInitialize();
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
+  double startTime = SDL_GetPerformanceCounter();
+  double targetFrameTime = 1000000000 / 60;
 
   homescreen home(renderer);
   home.init();
@@ -328,6 +435,8 @@ int main(int argc, char *argv[])
 
   home.textureMap.find("company_bg")->second.second.x = home.game_info_text_pos.x - 20;
 
+  AccountUid uid = {0};
+
   while (appletMainLoop())
   {
     hidScanInput();
@@ -352,7 +461,10 @@ int main(int argc, char *argv[])
     }
     else if (keyDown & KEY_A)
     {
-      Mix_PlayChannel(-1, launch, 0); //Play the audio file
+      //Mix_PlayChannel(-1, launch, 0); //Play the audio file
+      std::stringstream ss;
+      ss << 0 << std::hex << std::uppercase << LaunchApplication(titles[home.selected].TitleID, false, uid, NULL, NULL);
+      std::cout << ss.str() << '\n';
     }
 
     home.update(titles, icons);
@@ -413,8 +525,12 @@ int main(int argc, char *argv[])
 
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(1);
     SDL_RenderClear(renderer);
+
+    double between = (((double)SDL_GetPerformanceCounter() - startTime) / (double)SDL_GetPerformanceFrequency()) * 1000000000;
+    if (between < targetFrameTime)
+      svcSleepThread(targetFrameTime - between);
+    startTime = SDL_GetPerformanceCounter();
   }
   SDL_FreeSurface(news_surface);
   SDL_FreeSurface(e_shop_surface);
@@ -445,7 +561,7 @@ int main(int argc, char *argv[])
   nsExit();
   romfsExit();
   psmExit();
-  //appletExit();
+  appletExit();
 
   socketExit(); // Cleanup
 

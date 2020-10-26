@@ -5,66 +5,67 @@ homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 
 void homescreen::init()
 {
-  std::string name;
-  SDL_Rect temp_rect = {0, 0, 1280, 720};
-  int w, h = 0;
+  init_wallpaper();
+  init_icons_menu();
+  init_icon_buttons();
+  init_seperator();
+  init_top_menu();
+  init_top_left();
+  init_game_info();
+}
 
-  // wallpaper
+void homescreen::init_wallpaper()
+{
+  //SDL_Surface *bg_temp_surf = IMG_Load("bg.jpg");
+  //bg = SDL_CreateTextureFromSurface(renderer, bg_temp_surf);
 
-  SDL_Surface *bg_temp_surf = IMG_Load("bg.jpg");
-  bg = SDL_CreateTextureFromSurface(renderer, bg_temp_surf);
-
-  auto pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("wallpaper", "wallpaper.png"), temp_rect);
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("wallpaper", "wallpaper.png"), temp_rect);
   textureMap.insert(std::make_pair("wallpaper", pair));
+}
 
-  // icons menu
+void homescreen::init_icons_menu()
+{
   temp_rect = {20, 200, 240, 500};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("icons_bg", "icons_bg.png"), temp_rect);
   textureMap.insert(std::make_pair("icons_bg", pair));
-  // icons
-  for (auto i = 0; i < 6; i++)
-  {
-    switch (i)
-    {
-    case 0:
-      name = "news";
-      temp_rect = {60, 240, 35, 33};
-      break;
-    case 1:
-      name = "e_shop";
-      temp_rect = {62, 316, 30, 30};
-      w = 30;
-      h = 30;
-      break;
-    case 2:
-      name = "album";
-      temp_rect = {60, 400, 35, 23};
-      w = 35;
-      h = 23;
-      break;
-    case 3:
-      name = "controller";
-      temp_rect = {60, 470, 34, 33};
-      w = 34;
-      h = 33;
-      break;
-    case 4:
-      name = "settings";
-      temp_rect = {60, 550, 35, 36};
-      w = 35;
-      h = 36;
-      break;
-    case 5:
-      name = "power";
-      temp_rect = {65, 630, 28, 33};
-      w = 28;
-      h = 33;
-      break;
-    }
-    pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
-    textureMap.insert(std::make_pair(name, pair));
-  }
+  init_icon_buttons();
+}
 
+void homescreen::init_icon_buttons()
+{
+  name = "news";
+  temp_rect = {60, 240, 35, 33};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+
+  name = "e_shop";
+  temp_rect = {62, 316, 30, 30};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+
+  name = "album";
+  temp_rect = {60, 400, 35, 23};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+
+  name = "controller";
+  temp_rect = {60, 470, 34, 33};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+
+  name = "settings";
+  temp_rect = {60, 550, 35, 36};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+
+  name = "power";
+  temp_rect = {65, 630, 28, 33};
+  pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
+  textureMap.insert(std::make_pair(name, pair));
+}
+
+void homescreen::init_seperator()
+{
   temp_rect = {45, 290, 190, 5};
   std::string f = "seperator";
   name = "seperator";
@@ -86,9 +87,10 @@ void homescreen::init()
   name = "seperator5";
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, f + ".png"), temp_rect);
   textureMap.insert(std::make_pair(name, pair));
+}
 
-  // top menu
-  // bg
+void homescreen::init_top_menu()
+{
   name = "top_bg";
   temp_rect = {420, 50, 425, 50};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
@@ -108,8 +110,10 @@ void homescreen::init()
   temp_rect = {790, 68, 31, 15};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
   textureMap.insert(std::make_pair(name, pair));
+}
 
-  // avatar & hb menu
+void homescreen::init_top_left()
+{
   name = "avatar";
   temp_rect = {60, 40, 60, 60};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
@@ -119,8 +123,10 @@ void homescreen::init()
   temp_rect = {140, 40, 60, 60};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("hb_menu", name + ".png"), temp_rect);
   textureMap.insert(std::make_pair(name, pair));
-  // game info
+}
 
+void homescreen::init_game_info()
+{
   name = "company_bg";
   temp_rect = {0, 284, 640, 50};
   pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture(name, name + ".png"), temp_rect);
@@ -139,7 +145,7 @@ void homescreen::init()
 
 void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_Texture *> icons)
 {
-  update_wallpaper();
+  draw_wallpaper();
   draw_top_menu();
   draw_games(titles, icons);
   draw_icons_menu();
@@ -148,24 +154,25 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
   draw_details();
 }
 
-void homescreen::update_wallpaper()
+void homescreen::draw_wallpaper()
 {
-  /**
+  
   std::pair<SDL_Texture *, SDL_Rect> p = textureMap.find("wallpaper")->second;
   SDL_Texture *t = p.first;
   SDL_Rect r = p.second;
   SDL_RenderCopy(renderer, t, NULL, &r);
-  **/
+  
 
   // gif wallpaper test
-
+  /**
   ticks = SDL_GetTicks();
   seconds = ticks / 100;
   sprite = seconds % 42;
   x = (sprite % columns) * 1280;
   y = (sprite / columns) * 720;
-  srcrect = { x, y, 1280, 720 };
+  srcrect = {x, y, 1280, 720};
   SDL_RenderCopy(renderer, bg, &srcrect, &wallpaper_pos);
+  **/
 }
 
 void homescreen::draw_top_menu()
