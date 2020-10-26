@@ -16,7 +16,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include <SDL2_gfxPrimitives.h>
+#include <SDL_mixer.h>
 #include <switch.h>
 #include <switch/services/applet.h>
 #include <chrono>
@@ -199,6 +199,8 @@ Result LaunchApplication(AppletApplication *a, u64 *app_id)
 int main(int argc, char *argv[])
 {
   SDL_Init(SDL_INIT_EVERYTHING);
+  // Start SDL with audio support
+  SDL_Init(SDL_INIT_AUDIO);
 
   romfsInit();
   psmInitialize();
@@ -227,6 +229,13 @@ int main(int argc, char *argv[])
   home.init();
 
   chdir("romfs:/assets/UI/");
+
+  Mix_Init(MIX_INIT_MP3);
+
+  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
+  Mix_Music *audio = Mix_LoadMUS("bgm.mp3");
+  Mix_PlayMusic(audio, -1); //Play the audio file
+
   TTF_Font *font14 = TTF_OpenFont("font.ttf", 14);
   TTF_Font *font = TTF_OpenFont("font.ttf", 18);
   TTF_Font *font26 = TTF_OpenFont("font.ttf", 26);
@@ -426,6 +435,9 @@ int main(int argc, char *argv[])
   SDL_FreeSurface(windowSurface);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
+
+  // Free the loaded sound
+  Mix_FreeMusic(audio);
 
   SDL_Quit();
   nsExit();

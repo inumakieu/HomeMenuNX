@@ -5,19 +5,12 @@ homescreen::homescreen(SDL_Renderer *r) : base_screen(r){};
 
 void homescreen::init()
 {
+
   std::string name;
   SDL_Rect temp_rect = {0, 0, 1280, 720};
   int w, h = 0;
 
   // wallpaper
-
-  gif = gd_open_gif("test.gif");
-  frame = (Uint8*)malloc(gif->width * gif->height * 3);
-  color = &gif->gct.colors[gif->bgindex * 3];
-  gif_surface = SDL_CreateRGBSurface(0, gif->width, gif->height, 32, 0, 0, 0, 0);
-
-
-
   auto pair = std::pair<SDL_Texture *, SDL_Rect>(create_texture("wallpaper", "wallpaper.png"), temp_rect);
   textureMap.insert(std::make_pair("wallpaper", pair));
 
@@ -154,55 +147,13 @@ void homescreen::update(std::vector<Title> titles, std::unordered_map<u64, SDL_T
 
 void homescreen::update_wallpaper()
 {
-  /**
-  std::pair<SDL_Texture*, SDL_Rect> p = textureMap.find("wallpaper")->second;
+
+  std::pair<SDL_Texture *, SDL_Rect> p = textureMap.find("wallpaper")->second;
   SDL_Texture *t = p.first;
   SDL_Rect r = p.second;
   SDL_RenderCopy(renderer, t, NULL, &r);
-  **/
 
   // gif wallpaper test
-  t0 = SDL_GetTicks();
-  ret = gd_get_frame(gif);
-  SDL_LockSurface(gif_surface);
-  gd_render_frame(gif, frame);
-  color = frame;
-  for (size_t i = 0; i < gif->height; i++)
-  {
-    for (size_t j = 0; j < gif->width; j++)
-    {
-      if (!gd_is_bgcolor(gif, color))
-      {
-        pixel = SDL_MapRGB(gif_surface->format, color[0], color[1], color[2]);
-      } else if (((i >> 2) + (j >> 2) & 1))
-      {
-        pixel = SDL_MapRGB(gif_surface->format, 0x7F, 0x7F, 0x7F);
-      } else {
-        pixel = SDL_MapRGB(gif_surface->format, 0x00, 0x00, 0x00);
-      }
-      addr = gif_surface->pixels + (i * gif_surface->pitch + j * sizeof(pixel));
-      memcpy(addr, &pixel, sizeof(pixel));
-      color += 3;
-      
-    }
-    
-  }
-  SDL_UnlockSurface(gif_surface);
-  gif_texture = SDL_CreateTextureFromSurface(renderer, gif_surface);
-  SDL_RenderCopy(renderer, gif_texture, NULL, NULL);
-  SDL_RenderPresent(renderer);
-  SDL_DestroyTexture(gif_texture);
-  t1 = SDL_GetTicks();
-  delta = t1 - t0;
-  delay = gif->gce.delay * 10;
-  delay = delay > delta ? delay - delta: 1;
-  SDL_Delay(delay);
-  if(ret == 0)
-  {
-    gd_rewind(gif);
-  }
-  
-
 }
 
 void homescreen::draw_top_menu()
@@ -321,7 +272,7 @@ void homescreen::draw_games(std::vector<Title> titles, std::unordered_map<u64, S
   SDL_RenderCopy(renderer, selected_tex, NULL, &selected_rect);
 
   // loop through all games to the left of it and draw them to correct positions
-  
+
   SDL_Rect temp_rect = {470 - 260 - 40, 400, 260, 260};
   if (selected != 0)
   {

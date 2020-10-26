@@ -17,15 +17,6 @@ public:
   SDL_Rect game_info_text_pos = {0, 306, 0, 0};
   int selected = 0;
 
-  SDL_Surface *gif_surface;
-  SDL_Texture *gif_texture;
-  gd_GIF *gif;
-  Uint8 *color, *frame;
-  Uint32 pixel;
-  Uint32 t0, t1, delay, delta;
-  int ret;
-  void *addr;
-
   homescreen(SDL_Renderer *r);
 
   void init();

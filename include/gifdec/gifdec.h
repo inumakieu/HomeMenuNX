@@ -1,3 +1,7 @@
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
 #ifndef GIFDEC_H
 #define GIFDEC_H
 
@@ -46,3 +50,10 @@ void gd_rewind(gd_GIF *gif);
 void gd_close_gif(gd_GIF *gif);
 
 #endif /* GIFDEC_H */
+
+
+#if defined (__cplusplus)
+}
+#endif
+
+
